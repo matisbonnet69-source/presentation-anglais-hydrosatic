@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Why Still Water Pushes Back</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+:root{--bg-rgb:232,242,248;--fg-rgb:12,30,44;--acc-rgb:19,94,148;--bg:rgb(var(--bg-rgb));--fg:rgb(var(--fg-rgb));--acc:rgb(var(--acc-rgb));--hair:rgba(var(--fg-rgb),.22);--panel:rgba(var(--fg-rgb),.055);--head:'Space Grotesk',system-ui,sans-serif;--txt:'Newsreader',Georgia,serif;--mono:'JetBrains Mono',ui-monospace,Menlo,monospace;--ok:46,170,124;--bad:226,86,64}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--fg);font-family:var(--txt);font-size:clamp(15px,.55vw + 10px,20px);line-height:1.45;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+.hide{display:none!important}
+#bg{position:fixed;inset:0;z-index:0;pointer-events:none}
+#deck{position:fixed;inset:0;z-index:1}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;padding:clamp(52px,7vh,80px) clamp(18px,4.2vw,72px) 76px;overflow-y:auto;overflow-x:hidden;opacity:0;pointer-events:none;transition:transform .85s cubic-bezier(.7,0,.2,1),opacity .55s ease}
+.slide.on{opacity:1;pointer-events:auto}
+.wrap{margin:auto 0;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(18px,3vw,54px);align-items:start;width:100%}
+.wrap.eq{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.wrap.full{grid-template-columns:minmax(0,1fr)}
+@media(max-width:900px){.wrap,.wrap.eq{grid-template-columns:minmax(0,1fr)}}
+.eyebrow{font:600 .66rem var(--mono);letter-spacing:.16em;text-transform:uppercase;display:flex;gap:.8em;align-items:center;opacity:.85}
+.eyebrow b{color:var(--acc);font-weight:600}
+.eyebrow::after{content:"";flex:1;height:1px;background:var(--hair);max-width:8em}
+h1{font:700 clamp(2rem,3.9vw,3.8rem)/.98 var(--head);letter-spacing:-.035em;margin:.4em 0 .45em}
+h2{font:700 clamp(1.3rem,2.2vw,2rem)/1.1 var(--head);letter-spacing:-.02em}
+h3{font:600 .72rem var(--mono);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5em;opacity:.8}
+.lede{font-size:1.1rem;max-width:34em;margin-bottom:.8em}
+.lede em,.small em{font-style:italic;color:var(--acc)}
+.small{font-size:.9rem;opacity:.9;max-width:36em;margin-top:.6em}
+.mono{font-family:var(--mono)}
+.panel{border:1px solid var(--hair);background:var(--panel);padding:14px;position:relative;margin-top:14px}
+.panel:first-child{margin-top:0}
+.tag{position:absolute;top:-.62em;left:12px;background:var(--bg);padding:0 .6em;font:600 .6rem var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--acc)}
+.cv{width:100%;display:block}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+.btn{font:600 .66rem var(--mono);text-transform:uppercase;letter-spacing:.09em;border:1px solid var(--fg);padding:.6em .95em;transition:background .16s,color .16s,border-color .16s}
+.btn:hover,.btn.on{background:var(--acc);color:var(--bg);border-color:var(--acc)}
+.btn:focus-visible,.opt:focus-visible,.q:focus-visible,.ico:focus-visible,#timeline button:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.lab{font:500 .66rem var(--mono);letter-spacing:.08em;text-transform:uppercase;display:flex;justify-content:space-between;gap:1em;margin-top:12px;opacity:.9}
+.lab output{color:var(--acc);font-weight:600}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:22px;background:transparent;margin-top:2px;cursor:pointer}
+input[type=range]::-webkit-slider-runnable-track{height:2px;background:var(--fg)}
+input[type=range]::-moz-range-track{height:2px;background:var(--fg)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;margin-top:-7px;background:var(--acc);border:2px solid var(--bg);outline:1px solid var(--acc);border-radius:0}
+input[type=range]::-moz-range-thumb{width:12px;height:12px;background:var(--acc);border:2px solid var(--bg);outline:1px solid var(--acc);border-radius:0}
+.ro{font:500 .74rem/1.55 var(--mono);display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:2px 18px;margin-top:10px}
+.ro div{border-top:1px solid var(--hair);padding:.3em 0;display:flex;justify-content:space-between;gap:.6em}
+.ro span{opacity:.7}.ro b{color:var(--acc);font-weight:600;text-align:right}
+.qs{display:grid;gap:8px;margin:14px 0 8px}
+.q{text-align:left;border:1px solid var(--hair);padding:.7em .9em;font:600 .92rem var(--head);transition:.16s;display:flex;justify-content:space-between;gap:1em;align-items:center}
+.q:hover,.q.on{border-color:var(--acc);background:rgba(var(--acc-rgb),.14)}
+.answer{font-size:1rem;min-height:4.6em;border-left:3px solid var(--acc);padding:.3em 0 .3em .9em;max-width:34em}
+.pill{font:600 .66rem var(--mono);text-transform:uppercase;letter-spacing:.1em;padding:.55em .9em;border:1px solid var(--fg)}
+.pill.on{background:var(--fg);color:var(--bg)}
+.seg{display:inline-flex}.seg .pill+.pill{margin-left:-1px}
+.dec{display:grid;grid-template-columns:3.6em 1fr;gap:.8em;align-items:center;padding:.65em 0;border-top:1px solid var(--hair);cursor:default;transition:background .15s}
+.dec:hover{background:rgba(var(--acc-rgb),.1)}
+.dec .sym{font-size:1.6rem;text-align:center;color:var(--acc)}
+.dec b{font:600 .95rem var(--head);display:block}
+.dec p{font-size:.88rem;opacity:.9}
+.tk{display:inline-block;border:1px solid var(--hair);padding:.5em .7em;margin:.2em;font:600 .95rem var(--head);transition:.15s;background:rgba(var(--fg-rgb),.04)}
+.tk small{display:block;font:500 .58rem var(--mono);text-transform:uppercase;letter-spacing:.08em;opacity:.7;margin-top:.2em}
+.tk.hl{background:var(--acc);color:var(--bg);border-color:var(--acc)}
+.tk.hl small{opacity:.95}
+.eqstage{min-height:130px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;font-size:1.4rem}
+.stepbox{border-top:1px solid var(--hair);margin-top:12px;padding-top:10px;min-height:5.6em}
+.stepbox .cnt{font:600 .6rem var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--acc);margin-bottom:.4em}
+.stepbox p,.stepbox #stepText{font-size:1rem}
+.listx{list-style:none;counter-reset:n}
+.listx li{counter-increment:n;display:grid;grid-template-columns:2em 1fr;gap:.4em;padding:.5em 0;border-top:1px solid var(--hair);font-size:.92rem}
+.listx li::before{content:counter(n,decimal-leading-zero);font:600 .65rem var(--mono);color:var(--acc);padding-top:.35em}
+.listx .t{font-size:1rem;overflow-x:auto;overflow-y:hidden}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:1000px){.grid2{grid-template-columns:1fr}}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:6px}
+@media(max-width:1000px){.cards{grid-template-columns:1fr}}
+.card{border:1px solid var(--hair);padding:12px;text-align:left;transition:.18s;opacity:.62;background:transparent}
+.card:hover{opacity:.9}
+.card.on{opacity:1;border-color:var(--acc);background:rgba(var(--acc-rgb),.1);box-shadow:inset 0 3px 0 var(--acc)}
+.card h4{font:700 1.05rem var(--head);margin-bottom:.4em}
+.card .k{font:600 .56rem var(--mono);text-transform:uppercase;letter-spacing:.14em;color:var(--acc);margin-top:.7em}
+.card p{font-size:.86rem;line-height:1.35}
+.card .tx{font-size:.95rem;overflow-x:auto;overflow-y:hidden}
+#chrome{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:14px clamp(18px,4.2vw,72px);pointer-events:none}
+#chrome>*{pointer-events:auto}
+.brand{display:flex;align-items:center;gap:.7em;font:600 .64rem var(--mono);letter-spacing:.18em;text-transform:uppercase}
+.brand em{font-style:normal;color:var(--acc)}
+.tools{display:flex;gap:8px}
+.ico{border:1px solid var(--fg);height:30px;min-width:30px;padding:0 .7em;display:flex;align-items:center;justify-content:center;font:600 .6rem var(--mono);letter-spacing:.12em;transition:.16s}
+.ico:hover{background:var(--acc);color:var(--bg);border-color:var(--acc)}
+.ico svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8}
+#timeline{position:fixed;left:0;right:0;bottom:0;z-index:20;height:56px;display:flex;border-top:1px solid var(--hair);background:rgba(var(--bg-rgb),.72);backdrop-filter:blur(6px)}
+#timeline button{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:0 .7em;border-right:1px solid var(--hair);font:500 .54rem var(--mono);letter-spacing:.1em;text-transform:uppercase;opacity:.55;transition:.15s;text-align:left;min-width:0}
+#timeline button b{font:700 .9rem var(--head);letter-spacing:0}
+#timeline button span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+#timeline button:hover{opacity:1;background:rgba(var(--acc-rgb),.14)}
+#timeline button.on{opacity:1;box-shadow:inset 0 3px 0 var(--acc)}
+#tprog{position:absolute;left:0;top:-1px;height:2px;background:var(--acc);width:0;transition:width .6s}
+@media(max-width:700px){#timeline button span{display:none}}
+#hookLine{position:fixed;left:0;right:0;top:0;height:0;border-top:1px dashed rgba(var(--acc-rgb),.7);z-index:5;pointer-events:none;transition:opacity .4s}
+#hookLine span{position:absolute;right:clamp(18px,4.2vw,72px);top:-1.6em;font:600 .62rem var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--acc);background:var(--bg);padding:0 .5em}
+body:not([data-s="0"]) #hookLine{opacity:0}
+#notes{position:fixed;top:0;right:0;bottom:0;width:min(400px,92vw);z-index:40;background:var(--bg);border-left:1px solid var(--fg);transform:translateX(102%);transition:transform .4s cubic-bezier(.7,0,.2,1);padding:62px 22px 22px;overflow-y:auto;font-size:.92rem}
+#notes.open{transform:none}
+#notes h3{color:var(--acc)}
+#notes ul{margin:.6em 0 1em 1.1em}#notes li{margin-bottom:.5em}
+#notes .clock{font:600 1.8rem var(--mono);letter-spacing:-.02em}
+#notes .meta{font:500 .7rem var(--mono);display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;border-top:1px solid var(--hair);padding-top:.6em;margin:.6em 0}
+.keys{font:500 .62rem/1.7 var(--mono);opacity:.75;border-top:1px solid var(--hair);padding-top:.7em;margin-top:1.2em}
+.quiz{display:block}
+.qtop{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.qmeta{display:flex;align-items:center;gap:14px;font:600 .72rem var(--mono);letter-spacing:.08em;text-transform:uppercase}
+.qmeta .sc{color:var(--acc);font-size:.95rem}
+#ring{width:50px;height:50px}
+#ring circle{fill:none;stroke-width:4}
+#ringBg{stroke:var(--hair)}#ringFg{stroke:var(--acc);stroke-dasharray:138.2;stroke-dashoffset:0;transform:rotate(-90deg);transform-origin:26px 26px}
+#ring text{font:700 14px var(--mono);fill:var(--fg);text-anchor:middle}
+.qgrid{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:clamp(16px,2.6vw,40px);margin-top:14px;align-items:start}
+@media(max-width:900px){.qgrid{grid-template-columns:1fr}}
+#qtext{margin-bottom:14px;font-size:clamp(1.15rem,1.9vw,1.7rem);line-height:1.15}
+#qopts{display:grid;gap:8px}
+.opt{display:grid;grid-template-columns:2.2em 1fr;gap:.6em;text-align:left;border:1px solid var(--fg);padding:.7em .8em;font:500 .98rem/1.3 var(--txt);transition:.15s;background:rgba(var(--fg-rgb),.03)}
+.opt i{font:700 .9rem var(--mono);font-style:normal;color:var(--acc)}
+.opt:hover:not([disabled]){background:rgba(var(--acc-rgb),.16);border-color:var(--acc)}
+.opt[disabled]{cursor:default}
+.opt.right{background:rgba(var(--ok),.35);border-color:rgb(var(--ok))}
+.opt.wrong{background:rgba(var(--bad),.3);border-color:rgb(var(--bad))}
+.opt.dim{opacity:.45}
+#qfeed{margin-top:12px;font:600 .8rem var(--mono);letter-spacing:.08em;text-transform:uppercase;min-height:1.4em}
+#qwhy{font-size:.95rem;margin-top:10px;min-height:5em}
+.big{font:700 clamp(3rem,9vw,7rem)/1 var(--head);letter-spacing:-.05em;color:var(--acc)}
+.shake{animation:shake .4s}
+@keyframes shake{20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.katex{font-size:1.05em}
+.katex-display{margin:.3em 0;overflow-x:auto;overflow-y:hidden}
+::selection{background:var(--acc);color:var(--bg)}
+</style>
+</head>
+<body data-s="0">
+<canvas id="bg"></canvas>
+<div id="hookLine"><span>depth</span></div>
+
+<header id="chrome">
+  <div class="brand">
+    <svg width="26" height="18" viewBox="0 0 26 18" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1 5 Q4.5 1 8 5 T15 5 T22 5 L25 5"/><path d="M1 11 Q4.5 7 8 11 T15 11 T22 11 L25 11" opacity=".6"/><path d="M1 17 Q4.5 13 8 17 T15 17 T22 17 L25 17" opacity=".3"/></svg>
+    <span>Hydrostatics</span><em id="counter">01 / 11</em>
+  </div>
+  <div class="tools">
+    <button class="ico" id="btnNotes" title="Presenter notes (N)" aria-label="Toggle presenter notes">NOTES</button>
+    <button class="ico" id="btnSound" title="Mute or unmute (M)" aria-label="Toggle sound">
+      <svg id="icoOn" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12"/></svg>
+      <svg id="icoOff" class="hide" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M17 9l5 6M22 9l-5 6"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="deck">
+
+<!-- 01 -->
+<section class="slide" data-label="Hook"><div class="wrap">
+  <div>
+    <div class="eyebrow"><b>01</b> Motivation</div>
+    <h1>Why Still Water Pushes Back</h1>
+    <p class="lede">Swim three meters down and your ears complain. Go eleven kilometers down and a snailfish is perfectly relaxed. Something presses on everything underwater, from every side, and it never gets tired.</p>
+    <div class="qs" id="hookQs">
+      <button class="q" data-a="Three meters of water weigh about 0.3 kilograms on every square centimeter of your eardrum. The air pocket behind it has not caught up yet, so the drum bows inward. Pinch your nose and blow gently to push back.">Why do my ears hurt at 3 m?</button>
+      <button class="q" data-a="A fish is not a hollow shell. Its insides sit at the same pressure as the water outside, so nothing gets squeezed. Lower an empty sealed bottle down there and it folds like wet paper.">Why does the ocean not crush fish?</button>
+      <button class="q" data-a="It tries. Water spreads until the top is flat, and every layer is held up by the layer below pushing back. That push has a name. Pressure. The deeper you go, the harder it has to push.">Why does a lake not flatten into a pancake?</button>
+    </div>
+    <div class="answer" id="hookAns">Pick a question. Then move your mouse up and down the whole screen.</div>
+  </div>
+  <div class="panel">
+    <span class="tag">Live gauge, driven by your mouse</span>
+    <canvas id="c0" class="cv" style="height:clamp(230px,38vh,340px)"></canvas>
+    <div class="ro" id="r0"></div>
+    <p class="small">Top of the screen is the sea surface. Bottom is 110 m down. The dashed line follows you.</p>
+  </div>
+</div></section>
+
+<!-- 02 -->
+<section class="slide" data-label="Intuition"><div class="wrap">
+  <div>
+    <div class="eyebrow"><b>02</b> Intuition before math</div>
+    <h1>The Cube That Does Not Fall</h1>
+    <p class="lede">Picture a ten centimeter cube of water hanging in a swimming pool. It does not sink. It does not rise. Gravity is pulling on it, so something must be holding it up.</p>
+    <p class="lede">That something is the water around it. The water <em>below</em> pushes up a little harder than the water <em>above</em> pushes down. The difference is exactly the cube's weight.</p>
+    <p class="small">Switch each force off and watch what happens. Then slide the cube deeper. Both pushes grow, but the gap between them never changes.</p>
+  </div>
+  <div class="panel">
+    <span class="tag">Forces on a suspended parcel</span>
+    <canvas id="c1" class="cv" style="height:clamp(280px,46vh,420px)"></canvas>
+    <div class="row" id="cubeBtns">
+      <button class="btn on" data-k="g">Gravity</button>
+      <button class="btn on" data-k="t">Push from above</button>
+      <button class="btn on" data-k="b">Push from below</button>
+      <button class="btn" id="btnRelease">Reset position</button>
+    </div>
+    <label class="lab"><span>Depth of the cube</span><output id="o1">8.0 m</output></label>
+    <input type="range" id="s1" min="1" max="25" step="0.5" value="8" aria-label="Depth of the cube">
+    <div class="ro" id="r1"></div>
+    <p class="small mono" id="st1" style="margin-top:8px"></p>
+  </div>
+</div></section>
+
+<!-- 03 -->
+<section class="slide" data-label="The equation"><div class="wrap">
+  <div>
+    <div class="eyebrow"><b>03</b> Derivation</div>
+    <h1>One Line That Holds Up The Ocean</h1>
+    <p class="lede">Cut a thin slab out of still water. Nothing moves, so all forces cancel. That single idea is the whole derivation.</p>
+    <div id="decoders">
+      <div class="dec" data-t="grad"><div class="sym" data-tex="\nabla P"></div><div><b>How fast pressure changes</b><p>Walk through the fluid and read the gauge. This is how many pascals it climbs per meter you walk.</p></div></div>
+      <div class="dec" data-t="rho"><div class="sym" data-tex="\rho"></div><div><b>How tightly the stuff is packed</b><p>Kilograms in each cubic meter. Water 1000. Air about 1.2. Mercury 13,500.</p></div></div>
+      <div class="dec" data-t="g"><div class="sym" data-tex="\vec{g}"></div><div><b>How hard gravity pulls</b><p>9.81 meters per second squared on Earth, pointing down. The arrow is why the sign flips when you go up.</p></div></div>
+    </div>
+  </div>
+  <div>
+    <div class="panel">
+      <span class="tag">Reading the equation</span>
+      <div class="row" style="margin:0 0 8px;justify-content:space-between">
+        <div class="seg" id="modeBtns"><button class="pill on" data-m="en">Intuitive English</button><button class="pill" data-m="tex">Vector calculus</button></div>
+        <button class="btn" id="stepBtn">Next step</button>
+      </div>
+      <div class="eqstage">
+        <div id="eqEn">
+          <span class="tk" data-t="grad">Pressure build-up per meter<small>nabla P</small></span>
+          <span style="font-size:1.6rem">=</span>
+          <span class="tk" data-t="rho">Packing<small>rho</small></span>
+          <span style="font-size:1.6rem">&times;</span>
+          <span class="tk" data-t="g">Gravity<small>g</small></span>
+          <p class="small" style="margin:.6em auto 0">Pascals per meter equals kilograms per cubic meter times meters per second squared.</p>
+        </div>
+        <div id="eqTex" class="hide" style="width:100%"><div id="eqTexA"></div><div id="eqTexB"></div></div>
+      </div>
+      <div class="stepbox"><div class="cnt" id="stepCount">Step 1 of 4</div><div id="stepText"></div></div>
+    </div>
+    <div class="panel">
+      <span class="tag">The slab</span>
+      <canvas id="c2" class="cv" style="height:clamp(170px,26vh,250px)"></canvas>
+      <label class="lab"><span>Slab thickness</span><output id="o2">3.0 m</output></label>
+      <input type="range" id="s2" min="0.1" max="10" step="0.1" value="3" aria-label="Slab thickness">
+      <div class="ro" id="r2"></div>
+    </div>
+  </div>
+</div></section>
+
+<!-- 04 -->
+<section class="slide" data-label="Pascal"><div class="wrap">
+  <div>
+    <div class="eyebrow"><b>04</b> The Pascal paradox</div>
+    <h1>A Thin Tube Can Burst A Barrel</h1>
+    <p class="lede">In the 1600s, the story goes, Blaise Pascal fitted a long thin tube into a sealed barrel and poured water into the tube. A few cups of water were enough to split the barrel.</p>
+    <p class="lede">Only height matters. The equation has no term for width, volume or shape. A lake and a drinking straw of the same depth give the same pressure at the bottom.</p>
+    <div class="row" id="liqBtns"><span class="mono small" style="margin:0 6px 0 0">Liquid</span><button class="btn on" data-l="0">Water</button><button class="btn" data-l="1">Olive oil</button><button class="btn" data-l="2">Mercury</button></div>
+  </div>
+  <div class="panel">
+    <span class="tag">Three vessels, one floor pressure</span>
+    <canvas id="c3" class="cv" style="height:clamp(300px,50vh,460px)"></canvas>
+    <label class="lab"><span>Liquid height h</span><output id="o3">6.0 m</output></label>
+    <input type="range" id="s3" min="0.5" max="10" step="0.1" value="6" aria-label="Liquid height">
+    <p class="small">The cone's slanted walls carry part of the liquid's weight. The barrel's lid pushes down on the liquid below it. Nothing extra reaches the floor in the first case, and nothing is missing in the second.</p>
+  </div>
+</div></section>
+
+<!-- 05 -->
+<section class="slide" data-label="Liquids"><div class="wrap">
+  <div>
+    <div class="eyebrow"><b>05</b> Regime 1 &middot; incompressible</div>
+    <h1>Liquids Refuse To Squash</h1>
+    <p class="lede">Water barely changes density when you squeeze it. Treat <span data-tex="\rho"></span> as a constant and the equation integrates to a straight line.</p>
+    <div style="font-size:1.35rem;margin:.4em 0 .6em" data-tex="\Delta P = \rho\, g\, h" data-display></div>
+    <p class="small">Ten meters of water add about one atmosphere. That is the rule of thumb every diver learns. At the bottom of the Mariana Trench, the straight line is still within a few percent, because seawater only gets about five percent denser down there.</p>
+    <div class="row" id="mileBtns">
+      <button class="btn" data-d="0">Surface</button><button class="btn" data-d="40">Scuba limit</button><button class="btn" data-d="1000">Sunlight ends</button><button class="btn" data-d="3800">Titanic</button><button class="btn" data-d="10935">Challenger Deep</button>
+    </div>
+  </div>
+  <div class="panel">
+    <span class="tag">Deep-sea dive simulator</span>
+    <canvas id="c4" class="cv" style="height:clamp(280px,44vh,400px)"></canvas>
+    <label class="lab"><span>Depth</span><output id="o4">0 m</output></label>
+    <input type="range" id="s4" min="0" max="11000" step="1" value="0" aria-label="Depth in meters">
+    <div class="grid2">
+      <div><label class="lab"><span>Hull wall thickness</span><output id="o4t">60 mm</output></label><input type="range" id="s4t" min="10" max="150" step="1" value="60" aria-label="Hull thickness"></div>
+      <div class="row" style="align-self:end"><button class="btn" id="compBtn">Constant density</button></div>
+    </div>
+    <div class="ro" id="r4"></div>
+  </div>
+</div></section>
+
+<!-- 06 -->
+<section class="slide" data-label="Engineering"><div class="wrap full">
+  <div>
+    <div class="eyebrow"><b>06</b> Regime 1 applied</div>
+    <h1 style="margin-bottom:.3em">Small Force, Big Lift, Thick Dam</h1>
+  </div>
+  <div class="grid2">
+    <div class="panel">
+      <span class="tag">Hydraulic lift and Pascal's principle</span>
+      <canvas id="c5a" class="cv" style="height:clamp(210px,34vh,320px)"></canvas>
+      <label class="lab"><span>Your push on the small piston</span><output id="o5F">200 N</output></label>
+      <input type="range" id="s5F" min="50" max="800" step="10" value="200" aria-label="Input force">
+      <label class="lab"><span>Big piston area / small piston area</span><output id="o5R">20 x</output></label>
+      <input type="range" id="s5R" min="1" max="100" step="1" value="20" aria-label="Area ratio">
+      <div class="row"><button class="btn" id="pumpBtn">Pump 10 strokes</button><button class="btn" id="resetLift">Lower the car</button></div>
+      <div class="ro" id="r5a"></div>
+    </div>
+    <div class="panel">
+      <span class="tag">Dam wall, force from the water</span>
+      <canvas id="c5b" class="cv" style="height:clamp(210px,34vh,320px)"></canvas>
+      <div class="row" style="margin-top:6px" id="damModes"><button class="btn on" data-m="side">Side view</button><button class="btn" data-m="top">Top view</button></div>
+      <label class="lab"><span>Water depth at the dam</span><output id="o5H">100 m</output></label>
+      <input type="range" id="s5H" min="10" max="200" step="1" value="100" aria-label="Water depth">
+      <label class="lab"><span>Length of the lake behind it</span><output id="o5L">5 km</output></label>
+      <input type="range" id="s5L" min="0.5" max="30" step="0.5" value="5" aria-label="Lake length">
+      <div class="ro" id="r5b"></div>
+    </div>
+  </div>
+</div></section>
+
+<!-- 07 -->
+<section class="slide" data-label="Isothermal gas"><div class="wrap">
+  <div>
+    <div class="eyebrow"><b>07</b> Regime 2 &middot; compressible, isothermal</div>
+    <h1>Air Squashes, So The Rule Bends</h1>
+    <p class="lede">Air is a gas. Climb higher and the air above you thins out, so each layer weighs less than the one below it. Density is no longer a constant. It follows the pressure.</p>
+    <ul class="listx">
+      <li><div><div class="t" data-tex="\rho=\dfrac{P}{R_s T}"></div>Ideal gas law gives density from pressure and a fixed temperature.</div></li>
+      <li><div><div class="t" data-tex="\dfrac{dP}{dz}=-\dfrac{P\,g}{R_s T}"></div>Put it in the hydrostatic equation. Pressure now appears on both sides.</div></li>
+      <li><div><div class="t" data-tex="P(z)=P_0\,e^{-z/H},\quad H=\dfrac{R_s T}{g}\approx 8.4\ \mathrm{km}"></div>The solution is an exponential. Every H of altitude cuts the pressure by a factor of e.</div></li>
+    </ul>
+  </div>
+  <div class="panel">
+    <span class="tag">Altitude simulator</span>
+    <canvas id="c6" class="cv" style="height:clamp(280px,44vh,400px)"></canvas>
+    <div class="row" id="mile6"><button class="btn" data-z="0">Sea level</button><button class="btn" data-z="4808">Mont Blanc</button><button class="btn" data-z="8849">Everest</button><button class="btn" data-z="11000">Jet cruise</button></div>
+    <label class="lab"><span>Altitude</span><output id="o6">0 m</output></label>
+    <input type="range" id="s6z" min="0" max="12000" step="10" value="0" aria-label="Altitude">
+    <label class="lab"><span>Air temperature (held constant)</span><output id="o6T">288 K</output></label>
+    <input type="range" id="s6T" min="220" max="320" step="1" value="288" aria-label="Temperature">
+    <div class="row"><button class="btn" id="ovISA">Overlay real atmosphere</button><button class="btn" id="ovLin">Overlay ocean-style line</button></div>
+    <div class="ro" id="r6"></div>
+  </div>
+</div></section>
+
+<!-- 08 -->
+<section class="slide" data-label="Polytropic"><div class="wrap">
+  <div>
+    <div class="eyebrow"><b>08</b> Regime 3 &middot; polytropic</div>
+    <h1>Real Air Cools As You Climb</h1>
+    <p class="lede">Hike up a mountain and the temperature drops, about 6.5 degrees per kilometer. So the isothermal assumption was a fair first guess and a poor final answer.</p>
+    <p class="lede">Let pressure and density follow <span data-tex="P\propto\rho^{\,n}"></span> and the same hydrostatic equation gives a profile that ends at a finite height.</p>
+    <div style="font-size:1.1rem" data-tex="P(z)=P_0\left(1-\dfrac{\Gamma z}{T_0}\right)^{\frac{g}{R_s\Gamma}},\qquad n=\dfrac{1}{1-R_s\Gamma/g}" data-display></div>
+    <p class="small">The same equation holds up stars and gas giants. In a star, gravity points toward the center, so pressure must climb inward fast enough to carry the weight of everything above.</p>
+    <div class="seg" style="margin-top:8px" id="tabs7"><button class="pill on" data-t="atm">Atmosphere</button><button class="pill" data-t="star">Star</button></div>
+  </div>
+  <div>
+    <div class="panel" id="box7a">
+      <span class="tag">Lapse rate explorer</span>
+      <canvas id="c7" class="cv" style="height:clamp(250px,40vh,360px)"></canvas>
+      <label class="lab"><span>Temperature drop per km, <span data-tex="\Gamma"></span></span><output id="o7">6.5 K/km</output></label>
+      <input type="range" id="s7G" min="0" max="9.8" step="0.1" value="6.5" aria-label="Lapse rate">
+      <div class="row" id="preset7"><button class="btn" data-g="0">Isothermal</button><button class="btn on" data-g="6.5">Standard air</button><button class="btn" data-g="9.8">Dry adiabatic</button></div>
+      <div class="ro" id="r7"></div>
+    </div>
+    <div class="panel hide" id="box7b">
+      <span class="tag">A star holding itself up</span>
+      <canvas id="c8" class="cv" style="height:clamp(250px,40vh,360px)"></canvas>
+      <label class="lab"><span>Heat from fusion in the core</span><output id="o8">50 %</output></label>
+      <input type="range" id="s8" min="10" max="100" step="1" value="50" aria-label="Core heat">
+      <div class="ro" id="r8"></div>
+      <div style="margin-top:8px;font-size:1rem" data-tex="\dfrac{dP}{dr}=-\dfrac{G\,M(r)\,\rho}{r^{2}}" data-display></div>
+    </div>
+  </div>
+</div></section>
+
+<!-- 09 -->
+<section class="slide" data-label="Limits"><div class="wrap">
+  <div>
+    <div class="eyebrow"><b>09</b> Limits of validity</div>
+    <h1>Where The Rule Stops Working</h1>
+    <p class="lede">The equation assumes the fluid is not accelerating. Once it moves fast, churns hard, or lives in a very thin tube, other terms join the balance.</p>
+    <div class="seg" id="tabs9"><button class="pill on" data-t="flow">Fast flow</button><button class="pill" data-t="conv">Convection</button><button class="pill" data-t="cap">Tiny scales</button></div>
+    <p class="answer" id="t9text" style="margin-top:14px"></p>
+  </div>
+  <div class="panel">
+    <span class="tag" id="tag9">Venturi pipe</span>
+    <canvas id="c9" class="cv" style="height:clamp(250px,40vh,360px)"></canvas>
+    <label class="lab"><span id="l9">Inlet speed</span><output id="o9"></output></label>
+    <input type="range" id="s9" min="0.2" max="2.4" step="0.05" value="1" aria-label="Parameter">
+    <div class="ro" id="r9"></div>
+  </div>
+</div></section>
+
+<!-- 10 -->
+<section class="slide" data-label="Synthesis"><div class="wrap full">
+  <div>
+    <div class="eyebrow"><b>10</b> Synthesis</div>
+    <h1 style="margin-bottom:.3em">Three Regimes On One Page</h1>
+  </div>
+  <div>
+    <div class="cards" id="matrix"></div>
+    <div class="panel" style="margin-top:20px">
+      <span class="tag">Same start, same scale height, three densities</span>
+      <canvas id="c10" class="cv" style="height:clamp(180px,28vh,260px)"></canvas>
+    </div>
+  </div>
+</div></section>
+
+<!-- 11 -->
+<section class="slide" data-label="Quiz"><div class="wrap full quiz">
+  <div class="qtop">
+    <div class="eyebrow" style="flex:1;min-width:200px"><b>11</b> Audience quiz</div>
+    <div class="qmeta">
+      <span id="qn">Question 1 of 5</span><span class="sc" id="qsc">Score 0</span>
+      <button class="btn on" id="qTimerBtn">Timer on</button>
+      <svg id="ring" viewBox="0 0 52 52"><circle id="ringBg" cx="26" cy="26" r="22"/><circle id="ringFg" cx="26" cy="26" r="22"/><text id="ringT" x="26" y="31">30</text></svg>
+    </div>
+  </div>
+  <div id="qintro" style="margin-top:20px">
+    <h1>Your Turn At The Gauge</h1>
+    <p class="lede">Five questions. Thirty seconds each. Call out your answer, then the presenter clicks. Each answer plays a short animation that shows why.</p>
+    <button class="btn on" id="qStart">Start the quiz</button>
+  </div>
+  <div id="qplay" class="hide">
+    <div class="qgrid">
+      <div>
+        <h2 id="qtext"></h2>
+        <div id="qopts"></div>
+        <div id="qfeed"></div>
+        <div class="row"><button class="btn hide" id="qnext">Next question</button></div>
+      </div>
+      <div class="panel"><span class="tag">Why</span><canvas id="c11" class="cv" style="height:clamp(200px,32vh,280px)"></canvas><p id="qwhy">Pick an answer to see the picture.</p></div>
+    </div>
+  </div>
+  <div id="qend" class="hide" style="margin-top:20px">
+    <div class="eyebrow">Final reading</div>
+    <div class="big" id="qfinal">0 / 5</div>
+    <p class="lede" id="qmsg"></p>
+    <button class="btn on" id="qAgain">Play again</button>
+  </div>
+</div></section>
+
+</main>
+
+<nav id="timeline" aria-label="Slide timeline"><div id="tprog"></div></nav>
+
+<aside id="notes" aria-label="Presenter notes">
+  <h3 id="nTitle">Slide</h3>
+  <div class="clock" id="nClock">00:00</div>
+  <div class="row" style="margin-top:6px"><button class="btn" id="nStart">Start</button><button class="btn" id="nReset">Reset</button></div>
+  <div class="meta"><span>Time on this slide</span><b id="nTime"></b><span>Be here by</span><b id="nCum"></b><span>Pace</span><b id="nPace">not started</b></div>
+  <h3>Talking points</h3>
+  <ul id="nPts"></ul>
+  <h3>Interact</h3>
+  <p id="nDo"></p>
+  <div class="keys">ARROWS / SPACE / SCROLL move between slides<br>N notes &nbsp; M sound &nbsp; F fullscreen &nbsp; Esc close notes</div>
+</aside>
+
+<script>
+(()=>{
+'use strict';
+const $=(s,r=document)=>r.querySelector(s);
+const $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
+const lerp=(a,b,t)=>a+(b-a)*t;
+const sstep=(a,b,x)=>{const t=clamp((x-a)/(b-a),0,1);return t*t*(3-2*t);};
+const fmt=(x,d=1)=>Number(x).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
+const G={mouse:{x:innerWidth/2,y:innerHeight/2},depth:0,depthT:0,bump:0};
+const TH={bg:[232,242,248],fg:[12,30,44],acc:[19,94,148]};
+const col=(k,a=1)=>`rgba(${Math.round(TH[k][0])},${Math.round(TH[k][1])},${Math.round(TH[k][2])},${a})`;
+const GRAV='rgba(226,86,64,';
+const W={};
+
+/* ---------- math helper ---------- */
+function tex(el,s,disp){
+  if(window.katex){try{window.katex.render(s,el,{displayMode:!!disp,throwOnError:false});return;}catch(e){}}
+  el.textContent=s;
+}
+function renderMath(){$$('[data-tex]').forEach(el=>tex(el,el.dataset.tex,el.hasAttribute('data-display')));renderDer();}
+
+/* ---------- canvas helpers ---------- */
+function fit(c){
+  const r=c.getBoundingClientRect(),d=Math.min(window.devicePixelRatio||1,2);
+  const w=Math.max(10,Math.round(r.width)),h=Math.max(10,Math.round(r.height));
+  if(c._w!==w||c._h!==h||c._d!==d){c.width=w*d;c.height=h*d;c._w=w;c._h=h;c._d=d;}
+  const g=c.getContext('2d');g.setTransform(c._d,0,0,c._d,0,0);return{g,w:c._w,h:c._h};
+}
+function arrow(g,x1,y1,x2,y2,c,lw=2,head=8){
+  const a=Math.atan2(y2-y1,x2-x1);g.strokeStyle=c;g.fillStyle=c;g.lineWidth=lw;
+  g.beginPath();g.moveTo(x1,y1);g.lineTo(x2-Math.cos(a)*head*.6,y2-Math.sin(a)*head*.6);g.stroke();
+  g.beginPath();g.moveTo(x2,y2);g.lineTo(x2-Math.cos(a-.42)*head,y2-Math.sin(a-.42)*head);g.lineTo(x2-Math.cos(a+.42)*head,y2-Math.sin(a+.42)*head);g.closePath();g.fill();
+}
+function txt(g,s,x,y,c,size=11,al='left',wt=500){
+  g.font=`${wt} ${size}px JetBrains Mono, monospace`;g.fillStyle=c;g.textAlign=al;g.textBaseline='alphabetic';g.fillText(s,x,y);
+}
+function dial(g,cx,cy,R,val,max,ticks,major,labelFn){
+  g.lineCap='butt';g.lineWidth=10;
+  g.strokeStyle=col('fg',.12);g.beginPath();g.arc(cx,cy,R-6,Math.PI,2*Math.PI);g.stroke();
+  const f=clamp(val/max,0,1);
+  g.strokeStyle=col('acc',.9);g.beginPath();g.arc(cx,cy,R-6,Math.PI,Math.PI+f*Math.PI);g.stroke();
+  for(let i=0;i<=ticks;i++){
+    const a=Math.PI+i/ticks*Math.PI,mj=i%major===0,r1=R+2,r2=R-(mj?22:14);
+    g.strokeStyle=col('fg',mj?.85:.4);g.lineWidth=mj?2:1;g.beginPath();
+    g.moveTo(cx+Math.cos(a)*r1,cy+Math.sin(a)*r1);g.lineTo(cx+Math.cos(a)*r2,cy+Math.sin(a)*r2);g.stroke();
+    if(mj)txt(g,labelFn?labelFn(i*max/ticks):String(i*max/ticks),cx+Math.cos(a)*(R-38),cy+Math.sin(a)*(R-38)+4,col('fg',.85),11,'center');
+  }
+  const a=Math.PI+f*Math.PI;
+  g.strokeStyle=col('acc',1);g.lineWidth=3;g.beginPath();
+  g.moveTo(cx-Math.cos(a)*14,cy-Math.sin(a)*14);g.lineTo(cx+Math.cos(a)*(R-12),cy+Math.sin(a)*(R-12));g.stroke();
+  g.fillStyle=col('fg',1);g.beginPath();g.arc(cx,cy,7,0,7);g.fill();
+}
+function vessel(g,cx,yb,wf,Hh,lv,wc){
+  const N=60;
+  if(lv>0){
+    g.beginPath();
+    for(let i=0;i<=N;i++){const u=i/N*lv;g.lineTo(cx-wf(u)/2,yb-u*Hh);}
+    for(let i=N;i>=0;i--){const u=i/N*lv;g.lineTo(cx+wf(u)/2,yb-u*Hh);}
+    g.closePath();g.fillStyle=wc;g.fill();
+    const uy=yb-lv*Hh;g.strokeStyle=col('acc',.95);g.lineWidth=2;g.beginPath();g.moveTo(cx-wf(lv)/2,uy);g.lineTo(cx+wf(lv)/2,uy);g.stroke();
+  }
+  g.beginPath();g.moveTo(cx-wf(1)/2,yb-Hh);
+  for(let i=N-1;i>=0;i--){const u=i/N;g.lineTo(cx-wf(u)/2,yb-u*Hh);}
+  for(let i=0;i<=N;i++){const u=i/N;g.lineTo(cx+wf(u)/2,yb-u*Hh);}
+  g.strokeStyle=col('fg',.9);g.lineWidth=2.5;g.lineJoin='round';g.stroke();
+}
+
+/* ---------- Sound engine ---------- */
+class SoundEngine{
+  constructor(){this.ctx=null;this.muted=false;this.master=null;this.noise=null;this.dr=null;this.drT=0;this.hovT=0;}
+  init(){
+    if(this.ctx){if(this.ctx.state==='suspended')this.ctx.resume();return true;}
+    const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return false;
+    const c=this.ctx=new AC();
+    this.master=c.createGain();this.master.gain.value=this.muted?0:.65;
+    const comp=c.createDynamicsCompressor();this.master.connect(comp);comp.connect(c.destination);
+    const len=Math.floor(c.sampleRate*1.5),b=c.createBuffer(1,len,c.sampleRate),d=b.getChannelData(0);
+    for(let i=0;i<len;i++)d[i]=Math.random()*2-1;this.noise=b;
+    const o1=c.createOscillator(),o2=c.createOscillator(),f=c.createBiquadFilter(),gn=c.createGain();
+    o1.type='sine';o2.type='triangle';f.type='lowpass';f.frequency.value=600;gn.gain.value=0;
+    o1.connect(f);o2.connect(f);f.connect(gn);gn.connect(this.master);o1.start();o2.start();
+    this.dr={o1,o2,f,gn};
+    return true;
+  }
+  ok(){return this.ctx&&!this.muted;}
+  setMuted(m){this.muted=m;if(this.master)this.master.gain.setTargetAtTime(m?0:.65,this.ctx.currentTime,.03);}
+  env(g,t,a,peak,dec){g.gain.cancelScheduledValues(t);g.gain.setValueAtTime(0.0001,t);g.gain.linearRampToValueAtTime(peak,t+a);g.gain.exponentialRampToValueAtTime(0.0001,t+a+dec);}
+  nsrc(){const s=this.ctx.createBufferSource();s.buffer=this.noise;return s;}
+  whoosh(dir=1){
+    if(!this.ok())return;const c=this.ctx,t=c.currentTime,s=this.nsrc(),f=c.createBiquadFilter(),g=c.createGain();
+    f.type='lowpass';f.Q.value=3;f.frequency.setValueAtTime(dir>0?180:1500,t);f.frequency.exponentialRampToValueAtTime(dir>0?1700:200,t+.45);f.frequency.exponentialRampToValueAtTime(260,t+.9);
+    this.env(g,t,.18,.35,.7);s.connect(f);f.connect(g);g.connect(this.master);s.start(t);s.stop(t+1);
+    const o=c.createOscillator(),og=c.createGain(),fr=lerp(980,330,clamp(cur/10,0,1));
+    o.type='sine';o.frequency.setValueAtTime(fr,t+.05);o.frequency.exponentialRampToValueAtTime(fr*.97,t+1.2);
+    this.env(og,t+.05,.01,.12,1.1);o.connect(og);og.connect(this.master);o.start(t+.05);o.stop(t+1.4);
+  }
+  click(){
+    if(!this.ok())return;const c=this.ctx,t=c.currentTime,s=this.nsrc(),f=c.createBiquadFilter(),g=c.createGain();
+    f.type='highpass';f.frequency.value=3200;this.env(g,t,.001,.4,.03);s.connect(f);f.connect(g);g.connect(this.master);s.start(t);s.stop(t+.06);
+    const o=c.createOscillator(),og=c.createGain();o.frequency.setValueAtTime(1500,t);o.frequency.exponentialRampToValueAtTime(800,t+.05);
+    this.env(og,t,.002,.14,.06);o.connect(og);og.connect(this.master);o.start(t);o.stop(t+.1);
+  }
+  hover(){
+    if(!this.ok())return;const n=performance.now();if(n-this.hovT<70)return;this.hovT=n;
+    const c=this.ctx,t=c.currentTime,s=this.nsrc(),f=c.createBiquadFilter(),g=c.createGain();
+    f.type='highpass';f.frequency.value=6500;this.env(g,t,.001,.1,.012);s.connect(f);f.connect(g);g.connect(this.master);s.start(t);s.stop(t+.03);
+  }
+  drone(level){
+    if(!this.ok()||!this.dr)return;const c=this.ctx,t=c.currentTime,L=clamp(level,0,1),d=this.dr;
+    const fr=lerp(120,34,L);
+    d.o1.frequency.setTargetAtTime(fr,t,.05);d.o2.frequency.setTargetAtTime(fr*2.01,t,.05);
+    d.f.frequency.setTargetAtTime(lerp(1000,150,L),t,.06);
+    d.gn.gain.setTargetAtTime(.07+L*.09,t,.05);
+    clearTimeout(this.drT);this.drT=setTimeout(()=>{if(this.ctx)d.gn.gain.setTargetAtTime(0,this.ctx.currentTime,.15);},420);
+  }
+  tone(freqs,type,peak,dec,when=0,det=0){
+    if(!this.ok())return;const c=this.ctx,t=c.currentTime+when;
+    freqs.forEach((fr,i)=>{
+      const o=c.createOscillator(),g=c.createGain(),f=c.createBiquadFilter();
+      o.type=type;o.frequency.value=fr;o.detune.value=det*(i%2?1:-1);f.type='lowpass';f.frequency.value=type==='sawtooth'?520:2600;
+      this.env(g,t,.02,peak,dec);o.connect(f);f.connect(g);g.connect(this.master);o.start(t);o.stop(t+dec+.2);
+    });
+  }
+  correct(){this.tone([261.63,329.63,392,523.25],'triangle',.16,1.3);this.tone([523.25,659.25,784],'sine',.07,1.1,.12);}
+  wrong(){this.tone([110,116.5],'sawtooth',.2,.55,0,14);}
+  tick(){this.tone([1000],'sine',.07,.06);}
+  fin(){[392,494,587,784].forEach((f,i)=>this.tone([f],'triangle',.12,.7,i*.12));}
+}
+const snd=new SoundEngine();
+const firstGesture=()=>{snd.init();};
+addEventListener('pointerdown',firstGesture,{once:true});addEventListener('keydown',firstGesture,{once:true});
+$('#btnSound').addEventListener('click',()=>{snd.init();snd.setMuted(!snd.muted);$('#icoOn').classList.toggle('hide',snd.muted);$('#icoOff').classList.toggle('hide',!snd.muted);if(!snd.muted)snd.click();});
+document.addEventListener('mouseover',e=>{if(e.target.closest&&e.target.closest('.btn,.q,.pill,.opt,.card,#timeline button'))snd.hover();});
+document.addEventListener('click',e=>{if(e.target.closest&&e.target.closest('.btn,.q,.pill,.card,#timeline button')){snd.init();snd.click();}});
+document.addEventListener('pointerup',e=>{if(e.target&&e.target.type==='range')e.target.blur();});
+
+/* ---------- theme ---------- */
+const STOPS=[
+  {i:0,bg:[232,242,248],acc:[19,94,148]},
+  {i:2,bg:[212,234,244],acc:[14,104,150]},
+  {i:4,bg:[8,112,120],acc:[255,206,112]},
+  {i:6,bg:[11,66,98],acc:[255,184,77]},
+  {i:8,bg:[12,36,72],acc:[255,163,67]},
+  {i:10,bg:[5,15,34],acc:[255,120,92]}
+];
+const LIGHT=[238,247,248],DARK=[12,30,44];
+let pos=0,lastPos=-9;
+function updateTheme(dt){
+  pos+=(cur-pos)*Math.min(1,dt*2.4);
+  if(Math.abs(pos-lastPos)<.002)return;lastPos=pos;
+  let a=STOPS[0],b=STOPS[STOPS.length-1];
+  for(let k=0;k<STOPS.length-1;k++){if(pos>=STOPS[k].i&&pos<=STOPS[k+1].i){a=STOPS[k];b=STOPS[k+1];break;}}
+  const t=a===b?0:clamp((pos-a.i)/(b.i-a.i),0,1),s=t*t*(3-2*t);
+  TH.bg=a.bg.map((v,i)=>lerp(v,b.bg[i],s));TH.acc=a.acc.map((v,i)=>lerp(v,b.acc[i],s));
+  const lum=(.2126*TH.bg[0]+.7152*TH.bg[1]+.0722*TH.bg[2])/255,k=sstep(.26,.5,lum);
+  TH.fg=LIGHT.map((v,i)=>lerp(v,DARK[i],k));
+  const r=document.documentElement.style,j=v=>v.map(Math.round).join(',');
+  r.setProperty('--bg-rgb',j(TH.bg));r.setProperty('--fg-rgb',j(TH.fg));r.setProperty('--acc-rgb',j(TH.acc));
+}
+
+/* ---------- particle background ---------- */
+const bgc=$('#bg'),bgx=bgc.getContext('2d'),PT=[];
+for(let i=0;i<120;i++)PT.push({x:Math.random(),y:Math.random(),vx:(Math.random()-.5)*.012,vy:(Math.random()-.5)*.012,s:Math.random()*1.5+.6});
+function drawBG(dt){
+  const w=innerWidth,h=innerHeight,d=Math.min(devicePixelRatio||1,2);
+  if(bgc.width!==Math.round(w*d)||bgc.height!==Math.round(h*d)){bgc.width=Math.round(w*d);bgc.height=Math.round(h*d);}
+  bgx.setTransform(d,0,0,d,0,0);bgx.clearRect(0,0,w,h);
+  G.depthT=clamp(cur/10+G.bump,0,1);G.bump=0;G.depth+=(G.depthT-G.depth)*Math.min(1,dt*2);
+  const p=1+G.depth*2.8;
+  for(const q of PT){
+    q.x+=q.vx*dt;q.y+=q.vy*dt;if(q.x<0)q.x+=1;if(q.x>1)q.x-=1;if(q.y<0)q.y+=1;if(q.y>1)q.y-=1;
+    const yy=1-Math.pow(1-q.y,p);let px=q.x*w,py=yy*h;
+    const dx=px-G.mouse.x,dy=py-G.mouse.y,d2=dx*dx+dy*dy;
+    if(d2<26000){const f=(1-d2/26000)*34,dd=Math.sqrt(d2)+.01;px+=dx/dd*f;py+=dy/dd*f;}
+    const L=4+yy*16*(.4+G.depth);
+    bgx.strokeStyle=col('fg',.07+.1*yy);bgx.lineWidth=1;bgx.beginPath();bgx.moveTo(px,py);bgx.lineTo(px,py-L);bgx.stroke();
+    bgx.fillStyle=col('acc',.35+.3*yy);bgx.beginPath();bgx.arc(px,py,q.s,0,6.3);bgx.fill();
+  }
+}
+addEventListener('pointermove',e=>{G.mouse.x=e.clientX;G.mouse.y=e.clientY;});
+
+/* ---------- deck engine ---------- */
+const slides=$$('.slide'),NS=slides.length;let cur=0;
+const NOTES=[
+ {t:'Hook and motivation',time:'1:15',cum:'1:15',pts:['Open with the ear pop in a swimming pool. Everyone has felt it.','Ask the room: why does the ocean not crush a fish? Take one guess.','Say the key sentence: pressure is the push that holds every layer of fluid up.','Keep it short. The gauge does the talking.'],act:'Move the mouse slowly down the screen. Read the number aloud at 10 m, then at 100 m.'},
+ {t:'The cube that does not fall',time:'1:15',cum:'2:30',pts:['A small cube of water hangs in the pool. Why does it not sink?','The water below pushes up harder than the water above pushes down.','The difference is exactly the cube weight. Nothing more.','Slide it deeper. Both pushes grow, the gap stays fixed.'],act:'Switch off Push from below. The cube drops. Switch it back on, then reset position.'},
+ {t:'The equation',time:'1:45',cum:'4:15',pts:['Slab of water, area A, thickness dz. It is at rest, so forces sum to zero.','Walk the four steps with the Next step button. Do not rush step 2.','Decode the three symbols for the non-physicists: how fast, how packed, how hard.','Flip to Vector calculus for the engineers. Same sentence, different alphabet.'],act:'Hover each symbol on the left and watch it light up in the equation.'},
+ {t:'Pascal paradox',time:'1:15',cum:'5:30',pts:['Pascal barrel story: a thin tube of water bursts a barrel.','Three vessels, different volumes, same height, same floor pressure.','Where does the missing weight go? Into the walls of the cone.','Switch to mercury to show the same rule with a heavier liquid.'],act:'Drag the height slider and point at the three identical readouts.'},
+ {t:'Regime 1, incompressible',time:'1:45',cum:'7:15',pts:['If density is constant, the equation integrates to delta P equals rho g h.','Ten meters of water is about one atmosphere. Memorize that.','Jump to the Titanic, then Challenger Deep. Say the pressure per thumbnail.','Hull stress: thin wall fails first. Real hulls buckle even earlier.'],act:'Click Challenger Deep, then drop the hull thickness to 20 mm and watch it crumple.'},
+ {t:'Hydraulics and dams',time:'1:45',cum:'9:00',pts:['Pressure is the same everywhere in the closed fluid. Bigger area, bigger force.','No free lunch. The big piston moves less by the same factor.','Dam force grows with depth squared, since pressure and wetted height both grow.','Change the lake length. The force does not move. That answers quiz question 4.'],act:'Pump 10 strokes at a ratio of 20. Then slide the lake length from 1 km to 30 km.'},
+ {t:'Regime 2, isothermal gas',time:'1:45',cum:'10:45',pts:['Air is a gas. Density follows pressure, so the equation feeds on itself.','The solution is an exponential. Every 8.4 km the pressure drops to 37 percent.','Walk the altitude buttons. Mont Blanc half, Everest a third, jet cruise a quarter.','Show the ocean-style line: it hits zero at exactly H. That is the trap.'],act:'Toggle Overlay real atmosphere to show the gap, which sets up the next slide.'},
+ {t:'Regime 3, polytropic',time:'1:45',cum:'12:30',pts:['Air cools as you climb, 6.5 degrees per km. Isothermal is only a first guess.','Polytropic means pressure and density share a power law.','Dry adiabatic 9.8 degrees per km is the limit for rising unsaturated air.','Switch to Star: same equation, gravity points inward, fusion heat pushes out.'],act:'Click the three presets. Then open the Star tab and move the heat slider.'},
+ {t:'Limits of validity',time:'1:15',cum:'13:45',pts:['Rule of thumb: if the fluid is not accelerating, hydrostatics is fine.','Fast flow: pressure drops where water speeds up. That is Bernoulli.','Convection: vertical acceleration is a small fraction of g, but not zero.','Tiny tubes: surface tension takes over below about 3 mm.'],act:'Walk through the three tabs. Turn up the speed in Fast flow to open the gap.'},
+ {t:'Synthesis',time:'1:15',cum:'15:00',pts:['One equation, three closures: constant density, ideal gas, power law.','Click each column. The chart highlights the matching curve.','Say aloud: the physics is the same, only the density law changes.','Hand over to the audience: quiz time.'],act:'Click the three cards in order, then move to the quiz.'},
+ {t:'Audience quiz',time:'5:00 (separate block)',cum:'after the talk',pts:['Five questions, thirty seconds each. Timer can be switched off.','Let the audience shout, then click an answer. Sound effects mark right and wrong.','After each answer, read the one-line why and let the animation play.','Finish on the score screen. Thank the room.'],act:'Press Start the quiz. Use Next question after each reveal.'}
+];
+const tl=$('#timeline');
+slides.forEach((s,i)=>{
+  const b=document.createElement('button');b.innerHTML=`<b>${String(i+1).padStart(2,'0')}</b><span>${s.dataset.label}</span>`;
+  b.addEventListener('click',()=>go(i));tl.appendChild(b);
+});
+function go(i,silent){
+  i=clamp(i,0,NS-1);if(i===cur&&!silent)return;
+  const dir=i>cur?1:-1;cur=i;
+  slides.forEach((s,k)=>{s.style.transform=`translate3d(${(k-cur)*100}%,0,0)`;s.classList.toggle('on',k===cur);s.inert=k!==cur;s.setAttribute('aria-hidden',k!==cur?'true':'false');});
+  $$('#timeline button').forEach((b,k)=>b.classList.toggle('on',k===cur));
+  $('#tprog').style.width=(cur/(NS-1)*100)+'%';
+  $('#counter').textContent=`${String(cur+1).padStart(2,'0')} / ${NS}`;
+  document.body.dataset.s=cur;
+  slides[cur].scrollTop=0;updateNotes();
+  if(!silent){snd.init();snd.whoosh(dir);}
+}
+let wheelLock=0;
+addEventListener('wheel',e=>{
+  if(e.target.closest&&e.target.closest('#notes'))return;
+  const s=slides[cur],down=e.deltaY>0;
+  if(s.scrollHeight>s.clientHeight+4){
+    const atEnd=s.scrollTop+s.clientHeight>=s.scrollHeight-3,atTop=s.scrollTop<=0;
+    if((down&&!atEnd)||(!down&&!atTop))return;
+  }
+  const n=performance.now();if(n<wheelLock||Math.abs(e.deltaY)<18)return;wheelLock=n+850;go(cur+(down?1:-1));
+},{passive:true});
+addEventListener('keydown',e=>{
+  if(e.metaKey||e.ctrlKey||e.altKey)return;
+  const k=e.key,isRange=e.target&&e.target.type==='range';
+  if(k==='n'||k==='N'){toggleNotes();return;}
+  if(k==='m'||k==='M'){$('#btnSound').click();return;}
+  if(k==='f'||k==='F'){if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen();return;}
+  if(k==='Escape'){$('#notes').classList.remove('open');return;}
+  if(isRange)return;
+  if(k==='ArrowRight'||k==='ArrowDown'||k==='PageDown'||k===' '){e.preventDefault();go(cur+1);}
+  else if(k==='ArrowLeft'||k==='ArrowUp'||k==='PageUp'){e.preventDefault();go(cur-1);}
+  else if(k==='Home')go(0);else if(k==='End')go(NS-1);
+});
+$('#btnNotes').addEventListener('click',toggleNotes);
+function toggleNotes(){$('#notes').classList.toggle('open');updateNotes();}
+
+/* ---------- presenter notes + stopwatch ---------- */
+const sw={run:false,t0:0,el:0};
+function cumSec(i){const m=NOTES[i].cum.match(/^(\d+):(\d+)$/);return m?(+m[1])*60+(+m[2]):null;}
+function updateNotes(){
+  const n=NOTES[cur];$('#nTitle').textContent=`${String(cur+1).padStart(2,'0')}  ${n.t}`;
+  $('#nTime').textContent=n.time;$('#nCum').textContent=n.cum;
+  $('#nPts').innerHTML=n.pts.map(p=>`<li>${p}</li>`).join('');$('#nDo').textContent=n.act;
+}
+function tickClock(){
+  const e=sw.run?(performance.now()-sw.t0)/1000+sw.el:sw.el;
+  const m=Math.floor(e/60),s=Math.floor(e%60);$('#nClock').textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  const tgt=cumSec(cur);
+  if(tgt==null||(!sw.run&&sw.el===0))$('#nPace').textContent=tgt==null?'quiz block':'not started';
+  else{const d=Math.round(e-tgt);$('#nPace').textContent=d<=-10?`${-d}s ahead (if slide ends now)`:d<=10?'on pace':`${d}s behind`;}
+}
+$('#nStart').addEventListener('click',()=>{
+  if(sw.run){sw.el+=(performance.now()-sw.t0)/1000;sw.run=false;$('#nStart').textContent='Resume';}
+  else{sw.t0=performance.now();sw.run=true;$('#nStart').textContent='Pause';}
+});
+$('#nReset').addEventListener('click',()=>{sw.run=false;sw.el=0;$('#nStart').textContent='Start';});
+setInterval(tickClock,500);
+
+/* ---------- Slide 1 : hook ---------- */
+const hook={ty:.25,y:.25,line:$('#hookLine'),lab:$('#hookLine span')};
+$$('#hookQs .q').forEach(b=>b.addEventListener('click',()=>{$('#hookAns').textContent=b.dataset.a;$$('#hookQs .q').forEach(x=>x.classList.toggle('on',x===b));}));
+addEventListener('pointermove',e=>{hook.ty=clamp(e.clientY/innerHeight,0,1);});
+W[0]={draw(t,dt){
+  const prev=hook.y;hook.y+=(hook.ty-hook.y)*Math.min(1,dt*9);
+  const d=hook.y*110,bar=1.01325+1025*9.81*d/1e5,atm=bar/1.01325,extra=(bar-1.01325)*1.0197;
+  hook.line.style.transform=`translateY(${hook.y*innerHeight}px)`;hook.lab.textContent=`depth ${fmt(d,0)} m`;
+  const {g,w,h}=fit($('#c0'));g.clearRect(0,0,w,h);
+  dial(g,w/2,h*.86,Math.min(w*.46,h*.8),bar,14,14,2,v=>fmt(v,0));
+  txt(g,fmt(bar,2),w/2,h*.86-Math.min(w*.46,h*.8)*.34,col('fg',1),Math.min(36,w/9),'center',700);
+  txt(g,'BAR',w/2,h*.86-Math.min(w*.46,h*.8)*.34+18,col('acc',1),11,'center',600);
+  $('#r0').innerHTML=`<div><span>Depth</span><b>${fmt(d,0)} m</b></div><div><span>Absolute pressure</span><b>${fmt(atm,2)} atm</b></div><div><span>Water pressing on a fingernail (1 cm&sup2;)</span><b>${fmt(extra,2)} kg</b></div>`;
+  if(Math.abs(hook.y-prev)>.0004)snd.drone(hook.y);G.bump=hook.y*.5;
+}};
+
+/* ---------- Slide 2 : cube ---------- */
+const cube={on:{g:1,t:1,b:1},depth:8,off:0,v:0};
+$$('#cubeBtns .btn[data-k]').forEach(b=>b.addEventListener('click',()=>{const k=b.dataset.k;cube.on[k]=cube.on[k]?0:1;b.classList.toggle('on',!!cube.on[k]);cube.v=0;}));
+$('#s1').addEventListener('input',e=>{cube.depth=+e.target.value;$('#o1').textContent=fmt(cube.depth,1)+' m';snd.drone(cube.depth/25);});
+$('#btnRelease').addEventListener('click',()=>{cube.off=0;cube.v=0;});
+W[1]={draw(t,dt){
+  const {g,w,h}=fit($('#c1'));g.clearRect(0,0,w,h);
+  const pl=w*.05,pr=w*.95,top=30,bot=h-12,side=Math.min(58,w*.11);
+  const yOf=d=>top+44+((d-1)/24)*(bot-top-side-124);
+  const gr=g.createLinearGradient(0,top,0,bot);gr.addColorStop(0,'rgba(60,170,210,.14)');gr.addColorStop(1,'rgba(10,70,120,.5)');
+  g.fillStyle=gr;g.fillRect(pl,top,pr-pl,bot-top);
+  g.strokeStyle=col('fg',.9);g.lineWidth=2;g.beginPath();g.moveTo(pl,top-6);g.lineTo(pl,bot);g.lineTo(pr,bot);g.lineTo(pr,top-6);g.stroke();
+  g.strokeStyle=col('acc',1);g.lineWidth=2;g.beginPath();g.moveTo(pl,top);g.lineTo(pr,top);g.stroke();
+  [1,5,10,15,20,25].forEach(m=>{const y=yOf(m);g.strokeStyle=col('fg',.25);g.lineWidth=1;g.beginPath();g.moveTo(pl,y);g.lineTo(pl+10,y);g.stroke();txt(g,m+' m',pl+14,y+4,col('fg',.6),10);});
+  const T=1+cube.depth/4;
+  const net=(cube.on.b?1+T:0)-(cube.on.t?T:0)-(cube.on.g?1:0);
+  cube.v+=net*220*dt;cube.v*=Math.pow(.3,dt);cube.off+=cube.v*dt;
+  const rest=yOf(cube.depth),ymin=top+4,ymax=bot-side-6;let y=rest+cube.off;
+  if(y<ymin){y=ymin;cube.off=ymin-rest;cube.v=0;}if(y>ymax){y=ymax;cube.off=ymax-rest;cube.v=0;}
+  const cx=w*.5,x0=cx-side/2,Lt=22+cube.depth*.4,Lg=24,Lb=Lt+Lg;
+  g.fillStyle='rgba(255,255,255,.2)';g.fillRect(x0,y,side,side);g.strokeStyle=col('fg',1);g.lineWidth=2;g.strokeRect(x0,y,side,side);
+  txt(g,'10 cm cube',cx,y+side/2+3,col('fg',.8),9,'center');
+  const pc=col('acc',1);
+  if(cube.on.t){[-.3,0,.3].forEach(k=>arrow(g,cx+k*side,y-Lt,cx+k*side,y-1,pc,3,9));txt(g,'push down',x0-12,y-Lt/2,col('acc',1),10,'right',600);}
+  if(cube.on.b){[-.3,0,.3].forEach(k=>arrow(g,cx+k*side,y+side+Lb,cx+k*side,y+side+1,pc,3,9));txt(g,'push up (stronger)',x0-12,y+side+Lb/2+4,col('acc',1),10,'right',600);}
+  if(cube.on.g){arrow(g,x0+side+22,y+side*.15,x0+side+22,y+side*.15+Lg+10,GRAV+'1)',3,9);txt(g,'weight',x0+side+32,y+side*.15+Lg/2+8,GRAV+'1)',10,'left',600);}
+  txt(g,'arrow lengths not to scale, gap exaggerated',pr-6,bot-6,col('fg',.5),9,'right');
+  const dep=cube.depth,Pt=101325+1000*9.81*dep,Pb=Pt+1000*9.81*.1,Ft=Pt*.01,Fb=Pb*.01;
+  $('#r1').innerHTML=`<div><span>Push down on top face</span><b>${fmt(Ft,1)} N</b></div><div><span>Push up on bottom face</span><b>${fmt(Fb,1)} N</b></div><div><span>Gap (push up minus push down)</span><b>${fmt(Fb-Ft,2)} N</b></div><div><span>Weight of the water cube</span><b>9.81 N</b></div>`;
+  let s='';
+  if(Math.abs(net)<.02)s='Net force zero. The cube hangs there, perfectly still.';
+  else if(net>0)s=`Net force points up. ${y<=ymin+1?'It has hit the surface.':'The cube rises.'}`;
+  else s=`Net force points down. ${y>=ymax-1?'It rests on the floor.':'The cube sinks.'}`;
+  $('#st1').textContent=s;
+}};
+
+/* ---------- Slide 3 : derivation ---------- */
+const der={mode:'en',step:1,hl:null};
+const accHex=()=>'#'+TH.acc.map(v=>Math.round(v).toString(16).padStart(2,'0')).join('');
+const STEPS=[
+ {en:'Cut a thin slab out of still water, area A and thickness dz. Nothing moves, so every force on it cancels.',tex:'\\sum F_z = 0'},
+ {en:'Water below pushes up. Water above pushes down. The slab weighs something. Add the three and set the total to zero.',tex:'P(z)\\,A \\;-\\; P(z+\\Delta z)\\,A \\;-\\; \\rho g\\,A\\,\\Delta z = 0'},
+ {en:'Divide everything by the slab volume A times dz. What is left is pressure change per meter.',tex:'\\dfrac{P(z+\\Delta z)-P(z)}{\\Delta z} = -\\rho g'},
+ {en:'Shrink the slab toward nothing. The ratio becomes a derivative. In three dimensions the derivative becomes a gradient.',tex:'\\dfrac{dP}{dz}=-\\rho g \\quad\\Longrightarrow\\quad \\nabla P=\\rho\\,\\vec{g}'}
+];
+function eqA(h){const c=(k,s)=>h===k?`{\\color{${accHex()}}${s}}`:s;return `${c('grad','\\nabla P')} = ${c('rho','\\rho')}\\,${c('g','\\vec{g}')}`;}
+function eqB(h){const c=(k,s)=>h===k?`{\\color{${accHex()}}${s}}`:s;return `${c('grad','\\dfrac{dP}{dz}')} = -${c('rho','\\rho')}\\,${c('g','g')}`;}
+function renderDer(){
+  $('#eqEn').classList.toggle('hide',der.mode!=='en');$('#eqTex').classList.toggle('hide',der.mode!=='tex');
+  if(der.mode==='tex'){tex($('#eqTexA'),eqA(der.hl),true);tex($('#eqTexB'),eqB(der.hl),true);}
+  const s=STEPS[der.step-1],el=$('#stepText');
+  if(der.mode==='en')el.textContent=s.en;else tex(el,s.tex,true);
+  $('#stepCount').textContent=`Step ${der.step} of 4`;
+  $$('#eqEn .tk').forEach(e=>e.classList.toggle('hl',e.dataset.t===der.hl));
+}
+$$('#modeBtns .pill').forEach(b=>b.addEventListener('click',()=>{der.mode=b.dataset.m;$$('#modeBtns .pill').forEach(x=>x.classList.toggle('on',x===b));renderDer();}));
+$('#stepBtn').addEventListener('click',()=>{der.step=der.step%4+1;renderDer();});
+$$('#decoders .dec').forEach(d=>{d.addEventListener('mouseenter',()=>{der.hl=d.dataset.t;renderDer();});d.addEventListener('mouseleave',()=>{der.hl=null;renderDer();});});
+const slab={dz:3};
+$('#s2').addEventListener('input',e=>{slab.dz=+e.target.value;$('#o2').textContent=fmt(slab.dz,1)+' m';snd.drone(slab.dz/10);});
+W[2]={draw(t,dt){
+  const {g,w,h}=fit($('#c2'));g.clearRect(0,0,w,h);
+  const x0=w*.34,x1=w*.66,sp=14+((slab.dz-.1)/9.9)*(h*.5),cy=h*.5,sy=cy-sp/2;
+  const gr=g.createLinearGradient(0,0,0,h);gr.addColorStop(0,'rgba(60,170,210,.18)');gr.addColorStop(1,'rgba(10,70,120,.5)');
+  g.fillStyle=gr;g.fillRect(x0-30,4,x1-x0+60,h-8);
+  g.fillStyle='rgba(255,255,255,.25)';g.fillRect(x0,sy,x1-x0,sp);g.strokeStyle=col('fg',1);g.lineWidth=2;g.strokeRect(x0,sy,x1-x0,sp);
+  const Lt=26,Lw=Math.max(10,sp*.9),Lb=Lt+Lw,cx=(x0+x1)/2;
+  arrow(g,cx-30,sy-Lt,cx-30,sy-1,col('acc',1),3,9);arrow(g,cx+30,sy-Lt,cx+30,sy-1,col('acc',1),3,9);
+  arrow(g,cx-30,sy+sp+Lb,cx-30,sy+sp+1,col('acc',1),3,9);arrow(g,cx+30,sy+sp+Lb,cx+30,sy+sp+1,col('acc',1),3,9);
+  arrow(g,cx,sy+sp*.1,cx,sy+sp*.1+Lw*.85,GRAV+'1)',3,9);
+  txt(g,'P(z+dz) A',x1+36,sy-Lt/2+4,col('acc',1),10,'left',600);txt(g,'P(z) A',x1+36,sy+sp+Lb/2+4,col('acc',1),10,'left',600);txt(g,'weight',cx+8,sy+sp*.1+Lw*.4,GRAV+'1)',10,'left',600);
+  g.strokeStyle=col('fg',.6);g.lineWidth=1;g.beginPath();g.moveTo(x0-18,sy);g.lineTo(x0-18,sy+sp);g.stroke();txt(g,'dz',x0-22,cy+4,col('fg',.8),11,'right');
+  const dP=1000*9.81*slab.dz;
+  $('#r2').innerHTML=`<div><span>Pressure gap across the slab</span><b>${fmt(dP/1000,2)} kPa</b></div><div><span>Per meter</span><b>9.81 kPa/m</b></div><div><span>Weight of the slab per m&sup2;</span><b>${fmt(dP/1000,2)} kN</b></div>`;
+}};
+
+/* ---------- Slide 4 : Pascal ---------- */
+const pas={h:6,liq:0};
+const LIQ=[{n:'Water',r:1000,c:'rgba(32,150,190,.55)'},{n:'Olive oil',r:910,c:'rgba(214,170,40,.6)'},{n:'Mercury',r:13546,c:'rgba(170,180,190,.85)'}];
+const WFS=[u=>60,u=>60+120*u,u=>60-50*sstep(.16,.21,u)];
+$('#s3').addEventListener('input',e=>{pas.h=+e.target.value;$('#o3').textContent=fmt(pas.h,1)+' m';snd.drone(pas.h/10);});
+$$('#liqBtns .btn').forEach(b=>b.addEventListener('click',()=>{pas.liq=+b.dataset.l;$$('#liqBtns .btn').forEach(x=>x.classList.toggle('on',x===b));}));
+W[3]={draw(t,dt){
+  const {g,w,h}=fit($('#c3'));g.clearRect(0,0,w,h);
+  const L=LIQ[pas.liq],s=Math.min(1,(w/3-24)/150),yb=h-104,Hh=Math.max(120,h-168),lv=pas.h/10;
+  const names=['Straight jar','Cone, widens upward','Barrel with thin tube'];
+  const P=L.r*9.81*pas.h/1000,F=P*.05;
+  for(let i=0;i<3;i++){
+    const cx=w*(i+.5)/3,wf=u=>WFS[i](u)*s;
+    vessel(g,cx,yb,wf,Hh,lv,L.c);
+    let vol=0;const N=60;for(let k=0;k<N;k++){const u=(k+.5)/N*lv;vol+=Math.pow(WFS[i](u),2)*lv/N;}
+    const rel=vol/(3600*lv);
+    txt(g,names[i],cx,yb+20,col('fg',.9),Math.max(9,Math.min(11,w/60)),'center',600);
+    txt(g,`P = ${fmt(P,1)} kPa`,cx,yb+40,col('acc',1),12,'center',700);
+    txt(g,`force on floor ${fmt(F,1)} kN`,cx,yb+58,col('fg',.85),10,'center');
+    txt(g,`liquid inside ${fmt(rel,2)} x jar`,cx,yb+76,col('fg',.6),10,'center');
+  }
+  const ly=yb-lv*Hh;g.setLineDash([5,5]);g.strokeStyle=col('acc',.8);g.lineWidth=1;g.beginPath();g.moveTo(6,ly);g.lineTo(w-6,ly);g.stroke();g.setLineDash([]);
+  txt(g,`h = ${fmt(pas.h,1)} m`,8,ly-6,col('acc',1),11,'left',700);
+  txt(g,'same floor area in all three',w/2,12,col('fg',.55),10,'center');
+}};
+
+/* ---------- Slide 5 : dive ---------- */
+const dive={d:0,target:0,real:false,t:60};
+const Pdive=(d,real)=>101325+1025*9.81*d*(real?1+2.15e-6*d:1);
+$('#s4').addEventListener('input',e=>{dive.d=dive.target=+e.target.value;});
+$('#s4t').addEventListener('input',e=>{dive.t=+e.target.value;$('#o4t').textContent=dive.t+' mm';});
+$('#compBtn').addEventListener('click',()=>{dive.real=!dive.real;$('#compBtn').textContent=dive.real?'Density rises with depth':'Constant density';$('#compBtn').classList.toggle('on',dive.real);});
+$$('#mileBtns .btn').forEach(b=>b.addEventListener('click',()=>{dive.target=+b.dataset.d;}));
+W[4]={draw(t,dt){
+  if(Math.abs(dive.target-dive.d)>.5){dive.d+=(dive.target-dive.d)*Math.min(1,dt*2.2);if(Math.abs(dive.target-dive.d)<.5)dive.d=dive.target;snd.drone(dive.d/11000);}
+  $('#s4').value=dive.d;$('#o4').textContent=fmt(dive.d,0)+' m';
+  const {g,w,h}=fit($('#c4'));g.clearRect(0,0,w,h);
+  const P=Pdive(dive.d,dive.real),bar=P/1e5,Pc=Pdive(dive.d,false),mpa=P/1e6;
+  G.bump=dive.d/11000*.4;
+  const cx0=4,cw=Math.max(40,w*.15),top=8,bot=h-8,Hc=bot-top,yOf=d=>top+Math.sqrt(d/11000)*Hc;
+  const gr=g.createLinearGradient(0,top,0,bot);gr.addColorStop(0,'rgba(110,200,235,.75)');gr.addColorStop(.3,'rgba(30,120,170,.7)');gr.addColorStop(1,'rgba(3,12,30,.95)');
+  g.fillStyle=gr;g.fillRect(cx0,top,cw,Hc);g.strokeStyle=col('fg',.8);g.lineWidth=1.5;g.strokeRect(cx0,top,cw,Hc);
+  [[40,'40 m'],[1000,'1 km'],[3800,'3.8 km'],[10935,'10.9 km']].forEach(([d,l])=>{const y=yOf(d);g.strokeStyle='rgba(255,255,255,.6)';g.lineWidth=1;g.beginPath();g.moveTo(cx0,y);g.lineTo(cx0+cw,y);g.stroke();txt(g,l,cx0+cw+6,y+4,col('fg',.7),10);});
+  const my=yOf(dive.d);g.fillStyle=col('acc',1);g.beginPath();g.moveTo(cx0+cw,my);g.lineTo(cx0+cw+12,my-7);g.lineTo(cx0+cw+12,my+7);g.closePath();g.fill();
+  g.strokeStyle=col('acc',1);g.lineWidth=2;g.beginPath();g.moveTo(cx0,my);g.lineTo(cx0+cw,my);g.stroke();
+  txt(g,'depth scale compressed',cx0,bot-2,'rgba(255,255,255,.7)',8);
+  const hx=w*.52,hy=h*.46,R=Math.min(w*.14,h*.22),tmm=dive.t,tpx=2+tmm/150*R*.35;
+  const sig=P*1.0/(2*(tmm/1000))/1e6,ratio=sig/880;
+  g.beginPath();
+  const amp=ratio>1?Math.min(.22,(ratio-1)*.18):0;
+  for(let a=0;a<=Math.PI*2+.05;a+=.06){const r=R*(1+amp*Math.sin(a*7+1.3)*Math.sin(a*3));g.lineTo(hx+Math.cos(a)*r,hy+Math.sin(a)*r);}
+  g.closePath();g.fillStyle=col('fg',.08);g.fill();
+  g.lineWidth=tpx;g.strokeStyle=ratio>1?GRAV+'.95)':col('fg',.9);g.stroke();
+  const al=6+Math.min(34,Math.log10(1+bar)*12);
+  for(let k=0;k<14;k++){const a=k/14*Math.PI*2,r1=R+tpx/2+al+6,r2=R+tpx/2+5;arrow(g,hx+Math.cos(a)*r1,hy+Math.sin(a)*r1,hx+Math.cos(a)*r2,hy+Math.sin(a)*r2,col('acc',.85),2,6);}
+  txt(g,'1 m radius titanium sphere',hx,hy+R+al+30,col('fg',.8),10,'center');
+  txt(g,ratio>1?'wall stress above yield':'wall within limits',hx,hy+4,ratio>1?GRAV+'1)':col('fg',.7),10,'center',700);
+  const dx=w*.84,dy=h*.62,dr=Math.min(w*.15,h*.3);
+  dial(g,dx,dy,dr,bar,1200,12,4,v=>fmt(v,0));
+  txt(g,fmt(bar,0),dx,dy-dr*.35,col('fg',1),Math.min(26,w/16),'center',700);txt(g,'BAR',dx,dy-dr*.35+15,col('acc',1),10,'center',600);
+  const thumb=(P-101325)/1e5*1.0197*2/1000;
+  $('#r4').innerHTML=`<div><span>Pressure</span><b>${fmt(bar,1)} bar / ${fmt(bar/1.01325,1)} atm</b></div><div><span>On a thumbnail (2 cm&sup2;)</span><b>${fmt(thumb,2)} tonnes</b></div><div><span>Hull wall stress, P r / 2t</span><b>${fmt(sig,0)} MPa</b></div><div><span>Fraction of yield (880 MPa)</span><b>${fmt(ratio*100,0)} %</b></div><div><span>Constant-density error</span><b>${fmt((P-Pc)/1e5,1)} bar (${fmt((P-Pc)/P*100,1)} %)</b></div>`;
+}};
+
+/* ---------- Slide 6 : lift + dam ---------- */
+const lift={F:200,R:20,carH:0,pump:{q:0,t:0,act:false,lifted:false}};
+$('#s5F').addEventListener('input',e=>{lift.F=+e.target.value;$('#o5F').textContent=lift.F+' N';snd.drone(lift.F/800);});
+$('#s5R').addEventListener('input',e=>{lift.R=+e.target.value;$('#o5R').textContent=lift.R+' x';snd.drone(lift.R/100);});
+$('#pumpBtn').addEventListener('click',()=>{lift.pump.q+=10;});
+$('#resetLift').addEventListener('click',()=>{lift.carH=0;lift.pump.q=0;});
+const dam={H:100,L:5,mode:'side'};
+$('#s5H').addEventListener('input',e=>{dam.H=+e.target.value;$('#o5H').textContent=dam.H+' m';snd.drone(dam.H/200);});
+$('#s5L').addEventListener('input',e=>{dam.L=+e.target.value;$('#o5L').textContent=fmt(dam.L,1)+' km';snd.drone(.2);});
+$$('#damModes .btn').forEach(b=>b.addEventListener('click',()=>{dam.mode=b.dataset.m;$$('#damModes .btn').forEach(x=>x.classList.toggle('on',x===b));}));
+function drawLift(dt){
+  const {g,w,h}=fit($('#c5a'));g.clearRect(0,0,w,h);
+  const p=lift.pump;
+  if(!p.act&&p.q>0){p.act=true;p.t=0;p.lifted=false;p.q--;}
+  if(p.act){p.t+=dt/.22;if(p.t>.5&&!p.lifted){p.lifted=true;if(lift.F*lift.R>=19620)lift.carH=Math.min(lift.carH+40/lift.R*3,h*.34);}if(p.t>=1){p.act=false;}}
+  const stroke=p.act?Math.sin(clamp(p.t,0,1)*Math.PI)*24:0;
+  const wl=36,wr=44+(lift.R-1)/99*Math.min(130,w*.3),gap=Math.min(w*.18,90),total=wl+gap+wr,x0=(w-total)/2;
+  const base=h-18,ch=h*.5,yFl=base-ch*.35;
+  const xl=x0,xr=x0+wl+gap;
+  g.fillStyle='rgba(30,140,190,.55)';
+  g.fillRect(xl,yFl,wl,base-yFl);g.fillRect(xr,yFl,wr,base-yFl);g.fillRect(xl+wl,base-34,gap,34);
+  g.strokeStyle=col('fg',.9);g.lineWidth=2.5;g.beginPath();g.moveTo(xl,yFl-ch*.45);g.lineTo(xl,base);g.lineTo(xr+wr,base);g.lineTo(xr+wr,yFl-ch*.45);g.moveTo(xl+wl,yFl-ch*.45);g.lineTo(xl+wl,base-34);g.lineTo(xr,base-34);g.lineTo(xr,yFl-ch*.45);g.stroke();
+  const py=yFl+stroke;g.fillStyle=col('fg',.9);g.fillRect(xl,py-8,wl,8);
+  g.fillRect(xl+wl/2-3,py-ch*.4,6,ch*.4-8);g.fillRect(xl+wl/2-20,py-ch*.4-6,40,6);
+  arrow(g,xl+wl/2,py-ch*.4-48,xl+wl/2,py-ch*.4-8,GRAV+'1)',3,9);txt(g,`${lift.F} N`,xl+wl/2+8,py-ch*.4-26,GRAV+'1)',10,'left',700);
+  const cy=yFl-lift.carH;g.fillStyle=col('fg',.9);g.fillRect(xr,cy-8,wr,8);
+  const cw=Math.min(wr+30,150),cx=xr+wr/2-cw/2;g.fillStyle=col('acc',.85);g.fillRect(cx,cy-8-22,cw,16);g.fillRect(cx+cw*.22,cy-8-38,cw*.5,16);
+  g.fillStyle=col('fg',1);[.2,.8].forEach(k=>{g.beginPath();g.arc(cx+cw*k,cy-8,6,0,7);g.fill();});
+  txt(g,'2 tonne car',cx+cw/2,cy-52,col('fg',.8),10,'center',600);
+  const A1=10e-4,P=lift.F/A1,F2=lift.F*lift.R,ok=F2>=19620;
+  $('#r5a').innerHTML=`<div><span>Fluid pressure</span><b>${fmt(P/1000,0)} kPa</b></div><div><span>Force on big piston</span><b>${fmt(F2/1000,2)} kN</b></div><div><span>Car weighs</span><b>19.62 kN</b></div><div><span>Lift per 40 mm stroke</span><b>${fmt(40/lift.R,1)} mm</b></div><div><span>Verdict</span><b>${ok?'It lifts':'Not enough, need ratio '+fmt(19620/lift.F,0)+'+'}</b></div>`;
+}
+function drawDam(){
+  const {g,w,h}=fit($('#c5b'));g.clearRect(0,0,w,h);
+  const H=dam.H,rho=1000,gg=9.81,F=.5*rho*gg*H*H/1e6;
+  if(dam.mode==='side'){
+    const gy=h-26,Hpx=(h-70)*H/200,wallx=w*.58,lakeLen=60+(dam.L-.5)/29.5*(wallx-70);
+    g.fillStyle=col('fg',.18);g.fillRect(0,gy,w,26);
+    g.fillStyle='rgba(30,140,190,.45)';g.fillRect(wallx-lakeLen,gy-Hpx,lakeLen,Hpx);
+    g.strokeStyle=col('acc',1);g.lineWidth=2;g.beginPath();g.moveTo(wallx-lakeLen,gy-Hpx);g.lineTo(wallx,gy-Hpx);g.stroke();
+    const bw=Math.max(18,.8*Hpx);g.fillStyle=col('fg',.55);g.beginPath();g.moveTo(wallx,gy);g.lineTo(wallx,gy-Hpx*1.06);g.lineTo(wallx+10,gy-Hpx*1.06);g.lineTo(wallx+bw,gy);g.closePath();g.fill();
+    g.strokeStyle=col('fg',1);g.lineWidth=2;g.stroke();
+    const n=8,al=Math.min(70,w*.18);
+    for(let k=1;k<=n;k++){const d=k/(n+1),y=gy-Hpx+d*Hpx,len=d*al;if(len>3)arrow(g,wallx-len-4,y,wallx-3,y,col('acc',.95),2,6);}
+    g.strokeStyle=col('acc',.7);g.setLineDash([4,4]);g.beginPath();g.moveTo(wallx-4,gy-Hpx);g.lineTo(wallx-4-al*(Hpx>0?1:0)*(n/(n+1)),gy-Hpx+Hpx*n/(n+1));g.lineTo(wallx-4,gy);g.stroke();g.setLineDash([]);
+    const ry=gy-Hpx/3;arrow(g,wallx-al*.9-36,ry,wallx-3,ry,GRAV+'1)',4,11);txt(g,'total push at H/3',wallx-al*.9-36,ry-8,GRAV+'1)',10,'left',700);
+    txt(g,`lake ${fmt(dam.L,1)} km long`,wallx-lakeLen+6,gy-Hpx+16,'rgba(255,255,255,.9)',10);txt(g,`H = ${H} m`,wallx+14,gy-Hpx*.5,col('fg',.9),10);
+  }else{
+    const cx=w*.5,y0=h*.62,half=w*.26,sag=half*.55*(.5+.5*H/200);
+    g.fillStyle='rgba(30,140,190,.4)';g.fillRect(0,0,w,y0-sag*.5);
+    g.beginPath();g.moveTo(0,0);g.lineTo(0,y0+20);g.lineTo(cx-half,y0+20);g.lineTo(cx-half,y0);g.quadraticCurveTo(cx,y0-2*sag,cx+half,y0);g.lineTo(cx+half,y0+20);g.lineTo(w,y0+20);g.lineTo(w,0);g.closePath();
+    g.fillStyle='rgba(30,140,190,.38)';g.fill();
+    g.fillStyle=col('fg',.28);g.fillRect(0,y0,cx-half,h-y0);g.fillRect(cx+half,y0,w-cx-half,h-y0);
+    g.strokeStyle=col('fg',1);g.lineWidth=8;g.lineCap='round';g.beginPath();g.moveTo(cx-half,y0);g.quadraticCurveTo(cx,y0-2*sag,cx+half,y0);g.stroke();g.lineCap='butt';
+    for(let k=1;k<=7;k++){const u=k/8,x=lerp(cx-half,cx+half,u),yy=(1-u)*(1-u)*y0+2*(1-u)*u*(y0-2*sag)+u*u*y0;arrow(g,x,yy-34-sag*.1,x,yy-8,col('acc',.95),2,6);}
+    arrow(g,cx-half+6,y0+6,cx-half-34,y0+26,GRAV+'1)',3,9);arrow(g,cx+half-6,y0+6,cx+half+34,y0+26,GRAV+'1)',3,9);
+    txt(g,'water',12,18,'rgba(255,255,255,.9)',10);txt(g,'rock wall takes the thrust',cx-half-40,y0+46,GRAV+'1)',10,'right',600);txt(g,'arch turns push into squeeze',cx,h-10,col('fg',.8),10,'center');
+  }
+  $('#r5b').innerHTML=`<div><span>Pressure at the base</span><b>${fmt(rho*gg*H/1e5,1)} bar</b></div><div><span>Force per metre of wall</span><b>${fmt(F,1)} MN</b></div><div><span>Lake length now ${fmt(dam.L,1)} km</span><b>force unchanged</b></div>`;
+}
+W[5]={draw(t,dt){drawLift(dt);drawDam();}};
+
+/* ---------- Slide 7 : isothermal ---------- */
+const R_S=287.05,GG=9.81;
+const iso={z:0,target:0,T:288,isa:false,lin:false};
+const isaP=z=>z<=11000?101325*Math.pow(1-.0065*z/288.15,5.2559):22632*Math.exp(-GG*(z-11000)/(R_S*216.65));
+$('#s6z').addEventListener('input',e=>{iso.z=iso.target=+e.target.value;});
+$('#s6T').addEventListener('input',e=>{iso.T=+e.target.value;$('#o6T').textContent=iso.T+' K';snd.drone(.3);});
+$$('#mile6 .btn').forEach(b=>b.addEventListener('click',()=>{iso.target=+b.dataset.z;}));
+$('#ovISA').addEventListener('click',()=>{iso.isa=!iso.isa;$('#ovISA').classList.toggle('on',iso.isa);});
+$('#ovLin').addEventListener('click',()=>{iso.lin=!iso.lin;$('#ovLin').classList.toggle('on',iso.lin);});
+const AIRPTS=[];for(let i=0;i<220;i++)AIRPTS.push({x:Math.random(),m:(i+.5)/220,ph:Math.random()*6.3});
+W[6]={draw(t,dt){
+  if(Math.abs(iso.target-iso.z)>.5){iso.z+=(iso.target-iso.z)*Math.min(1,dt*3);if(Math.abs(iso.target-iso.z)<1)iso.z=iso.target;snd.drone(1-iso.z/12000);}
+  $('#s6z').value=iso.z;$('#o6').textContent=fmt(iso.z,0)+' m';
+  const {g,w,h}=fit($('#c6'));g.clearRect(0,0,w,h);
+  const H=R_S*iso.T/GG,zmax=12000,P0=101.325;
+  const colW=w*.26,top=14,bot=h-30,yz=z=>bot-(z/zmax)*(bot-top);
+  g.strokeStyle=col('fg',.7);g.lineWidth=1.5;g.strokeRect(6,top,colW,bot-top);
+  const gg=g.createLinearGradient(0,top,0,bot);gg.addColorStop(0,'rgba(20,60,120,.25)');gg.addColorStop(1,'rgba(120,190,230,.28)');g.fillStyle=gg;g.fillRect(6,top,colW,bot-top);
+  const norm=1-Math.exp(-zmax/H);
+  AIRPTS.forEach(p=>{const z=-H*Math.log(1-p.m*norm),y=yz(z)+Math.sin(t*2+p.ph)*1.5,x=6+4+p.x*(colW-8);g.fillStyle=col('fg',.55);g.beginPath();g.arc(x,y,1.5,0,7);g.fill();});
+  const zy=yz(iso.z);g.strokeStyle=col('acc',1);g.lineWidth=2;g.beginPath();g.moveTo(0,zy);g.lineTo(w,zy);g.stroke();
+  const cx0=colW+54,cx1=w-14;const xp=P=>cx0+(P/P0)*(cx1-cx0);
+  g.strokeStyle=col('fg',.4);g.lineWidth=1;g.beginPath();g.moveTo(cx0,top);g.lineTo(cx0,bot);g.lineTo(cx1,bot);g.stroke();
+  [0,25,50,75,100].forEach(v=>{const x=xp(v);g.beginPath();g.moveTo(x,bot);g.lineTo(x,bot+4);g.stroke();txt(g,v,x,bot+16,col('fg',.6),9,'center');});
+  [0,4,8,12].forEach(k=>{const y=yz(k*1000);txt(g,k+' km',cx0-6,y+4,col('fg',.6),9,'right');});
+  txt(g,'pressure (kPa)',(cx0+cx1)/2,h-2,col('fg',.6),9,'center');
+  const curve=(fn,c,lw,dash)=>{g.beginPath();for(let z=0;z<=zmax;z+=100){const P=fn(z),x=xp(P),y=yz(z);z===0?g.moveTo(x,y):g.lineTo(x,y);}g.setLineDash(dash||[]);g.strokeStyle=c;g.lineWidth=lw;g.stroke();g.setLineDash([]);};
+  if(iso.lin){const rho0=101325/(R_S*iso.T);curve(z=>Math.max(0,P0-rho0*GG*z/1000),GRAV+'.9)',2,[6,4]);}
+  if(iso.isa)curve(z=>isaP(z)/1000,col('fg',.8),2,[3,4]);
+  curve(z=>P0*Math.exp(-z/H),col('acc',1),3);
+  [[0,'Sea level'],[4808,'Mont Blanc'],[8849,'Everest'],[11000,'Jet']].forEach(([z,l])=>{const P=P0*Math.exp(-z/H),x=xp(P),y=yz(z);g.fillStyle=col('fg',1);g.beginPath();g.arc(x,y,4,0,7);g.fill();txt(g,l,x+8,y+3,col('fg',.8),9);});
+  const Pz=P0*Math.exp(-iso.z/H);g.fillStyle=col('acc',1);g.beginPath();g.arc(xp(Pz),zy,7,0,7);g.fill();
+  if(iso.lin)txt(g,'ocean-style line reaches zero at z = H',cx1,top+12,GRAV+'1)',9,'right',600);
+  const rho=Pz*1000/(R_S*iso.T);
+  $('#r6').innerHTML=`<div><span>Pressure</span><b>${fmt(Pz,1)} kPa / ${fmt(Pz/101.325,2)} atm</b></div><div><span>Air density</span><b>${fmt(rho,3)} kg/m&sup3;</b></div><div><span>Scale height H</span><b>${fmt(H/1000,2)} km</b></div><div><span>Oxygen pressure (21 %)</span><b>${fmt(Pz*.21,1)} kPa</b></div><div><span>Real atmosphere here</span><b>${fmt(isaP(iso.z)/1000,1)} kPa</b></div>`;
+}};
+
+/* ---------- Slide 8 : polytropic + star ---------- */
+const poly={G:6.5};
+function setG(v){poly.G=v;$('#s7G').value=v;$('#o7').textContent=fmt(v,1)+' K/km';$$('#preset7 .btn').forEach(b=>b.classList.toggle('on',Math.abs(+b.dataset.g-v)<.05));snd.drone(v/9.8);}
+$('#s7G').addEventListener('input',e=>setG(+e.target.value));
+$$('#preset7 .btn').forEach(b=>b.addEventListener('click',()=>setG(+b.dataset.g)));
+let tab7='atm';
+$$('#tabs7 .pill').forEach(b=>b.addEventListener('click',()=>{tab7=b.dataset.t;$$('#tabs7 .pill').forEach(x=>x.classList.toggle('on',x===b));$('#box7a').classList.toggle('hide',tab7!=='atm');$('#box7b').classList.toggle('hide',tab7!=='star');}));
+const star={heat:50,R:90};
+$('#s8').addEventListener('input',e=>{star.heat=+e.target.value;$('#o8').textContent=star.heat+' %';snd.drone(star.heat/100);});
+const polyP=(z,G)=>{const T0=288.15;if(G<.05)return Math.exp(-z*GG/(R_S*T0));const base=1-G/1000*z/T0;return base<=0?0:Math.pow(base,GG/(R_S*G/1000));};
+function drawAtm(){
+  const {g,w,h}=fit($('#c7'));g.clearRect(0,0,w,h);
+  const zmax=16000,top=14,bot=h-30,yz=z=>bot-(z/zmax)*(bot-top),half=w/2-16;
+  const Gn=poly.G,T0=288.15;
+  const x0a=34,x1a=half-6;const xT=T=>x0a+((T-170)/(300-170))*(x1a-x0a);
+  g.strokeStyle=col('fg',.4);g.lineWidth=1;g.beginPath();g.moveTo(x0a,top);g.lineTo(x0a,bot);g.lineTo(x1a,bot);g.stroke();
+  [180,220,260,300].forEach(T=>{txt(g,T,xT(T),bot+14,col('fg',.6),9,'center');});txt(g,'temperature (K)',(x0a+x1a)/2,h-2,col('fg',.6),9,'center');
+  [0,4,8,12,16].forEach(k=>txt(g,k+' km',x0a-4,yz(k*1000)+4,col('fg',.6),9,'right'));
+  const Tz=z=>Math.max(170,T0-Gn*z/1000);
+  g.beginPath();for(let z=0;z<=zmax;z+=200){const x=xT(Tz(z)),y=yz(z);z===0?g.moveTo(x,y):g.lineTo(x,y);}g.strokeStyle=col('acc',1);g.lineWidth=3;g.stroke();
+  g.setLineDash([4,4]);g.beginPath();g.moveTo(xT(T0),yz(0));g.lineTo(xT(T0),yz(zmax));g.strokeStyle=col('fg',.5);g.lineWidth=1.5;g.stroke();g.setLineDash([]);
+  const p0=half+30,p1=w-12,xP=P=>p0+P*(p1-p0);
+  g.strokeStyle=col('fg',.4);g.lineWidth=1;g.beginPath();g.moveTo(p0,top);g.lineTo(p0,bot);g.lineTo(p1,bot);g.stroke();
+  [0,.5,1].forEach(v=>txt(g,v,xP(v),bot+14,col('fg',.6),9,'center'));txt(g,'P / P0',(p0+p1)/2,h-2,col('fg',.6),9,'center');
+  const crv=(G,c,lw,dash)=>{g.beginPath();let first=true;for(let z=0;z<=zmax;z+=200){const P=polyP(z,G);if(P<=0&&!first)break;const x=xP(P),y=yz(z);first?g.moveTo(x,y):g.lineTo(x,y);first=false;}g.setLineDash(dash||[]);g.strokeStyle=c;g.lineWidth=lw;g.stroke();g.setLineDash([]);};
+  crv(0,col('fg',.6),1.5,[5,4]);crv(Gn,col('acc',1),3);
+  txt(g,'isothermal',p1,yz(zmax*.55),col('fg',.7),9,'right');
+  const ze=8849,pe=polyP(ze,Gn);g.fillStyle=col('fg',1);g.beginPath();g.arc(xP(pe),yz(ze),4,0,7);g.fill();txt(g,'Everest',xP(pe)+8,yz(ze)+3,col('fg',.9),9);
+  g.beginPath();g.arc(xT(Tz(ze)),yz(ze),4,0,7);g.fill();
+  const n=Gn<.05?1:1/(1-R_S*Gn/1000/GG),ztop=Gn<.05?Infinity:T0/(Gn/1000);
+  $('#r7').innerHTML=`<div><span>Polytropic index n</span><b>${fmt(n,2)}</b></div><div><span>Temperature on Everest</span><b>${fmt(Tz(ze)-273.15,0)} C</b></div><div><span>Pressure on Everest</span><b>${fmt(101.325*pe,1)} kPa</b></div><div><span>Atmosphere ends at</span><b>${ztop===Infinity?'never':fmt(ztop/1000,0)+' km'}</b></div>`;
+}
+function drawStar(dt){
+  const {g,w,h}=fit($('#c8'));g.clearRect(0,0,w,h);
+  const Req=40+star.heat*1.1;star.R+=(Req-star.R)*Math.min(1,dt*1.4);
+  const cx=w/2,cy=h/2,R=Math.min(star.R,Math.min(w,h)*.38);
+  const gr=g.createRadialGradient(cx,cy,R*.1,cx,cy,R*1.5);gr.addColorStop(0,'rgba(255,230,160,.95)');gr.addColorStop(.55,'rgba(255,150,60,.55)');gr.addColorStop(1,'rgba(255,100,40,0)');
+  g.fillStyle=gr;g.beginPath();g.arc(cx,cy,R*1.5,0,7);g.fill();
+  g.strokeStyle=col('fg',.8);g.lineWidth=1.5;g.beginPath();g.arc(cx,cy,R,0,7);g.stroke();
+  const Gin=34,Pout=clamp(34*Math.pow(Req/R,2),8,80);
+  for(let k=0;k<12;k++){const a=k/12*Math.PI*2+.26;
+    arrow(g,cx+Math.cos(a)*(R+Gin+22),cy+Math.sin(a)*(R+Gin+22),cx+Math.cos(a)*(R+8),cy+Math.sin(a)*(R+8),GRAV+'1)',3,9);
+    arrow(g,cx+Math.cos(a+.26)*(R*.35),cy+Math.sin(a+.26)*(R*.35),cx+Math.cos(a+.26)*(R*.35+Pout*Math.min(1,R/70)),cy+Math.sin(a+.26)*(R*.35+Pout*Math.min(1,R/70)),col('acc',1),3,8);}
+  txt(g,'gravity inward',12,20,GRAV+'1)',10,'left',700);txt(g,'pressure gradient outward',12,36,col('acc',1),10,'left',700);
+  const d=star.R-Req;const st=Math.abs(d)<2?'Balanced. Hydrostatic equilibrium.':d>0?'Pressure too weak. Gravity wins and the star shrinks.':'Pressure too strong. The star swells.';
+  $('#r8').innerHTML=`<div><span>Status</span><b>${st}</b></div><div><span>Sun core, for scale</span><b>15 million K</b></div><div><span>Sun core pressure</span><b>about 2.5e16 Pa</b></div>`;
+}
+W[7]={draw(t,dt){if(tab7==='atm')drawAtm();else drawStar(dt);}};
+
+/* ---------- Slide 9 : limits ---------- */
+let tab9='flow';const p9={flow:1,conv:6,cap:1};
+const CFG9={
+ flow:{tag:'Venturi pipe',lab:'Inlet speed (m/s)',min:.2,max:2.4,step:.05,txt:'Let the water move and pressure is no longer the same at the same height. Where the pipe narrows the water speeds up and its pressure drops. Hydrostatics predicts two equal columns. Bernoulli does not.'},
+ conv:{tag:'Heated layer',lab:'Bottom hotter by (K)',min:0,max:20,step:.5,txt:'Heat the bottom and warm fluid rises while cold fluid sinks. The fluid now accelerates vertically, so the force balance has a leftover term. The relative error is about the buoyant acceleration divided by g.'},
+ cap:{tag:'Capillary tube',lab:'Tube radius (mm)',min:.1,max:5,step:.05,txt:'Below a few millimeters, surface tension competes with weight. Water climbs a narrow tube against gravity and no hydrostatic argument about a flat surface survives.'}
+};
+function setTab9(t){tab9=t;const c=CFG9[t],s=$('#s9');$$('#tabs9 .pill').forEach(x=>x.classList.toggle('on',x.dataset.t===t));
+  s.min=c.min;s.max=c.max;s.step=c.step;s.value=p9[t];$('#l9').textContent=c.lab;$('#tag9').textContent=c.tag;$('#t9text').textContent=c.txt;$('#o9').textContent=fmt(p9[t],t==='conv'?1:2);}
+$$('#tabs9 .pill').forEach(b=>b.addEventListener('click',()=>setTab9(b.dataset.t)));
+$('#s9').addEventListener('input',e=>{p9[tab9]=+e.target.value;$('#o9').textContent=fmt(p9[tab9],tab9==='conv'?1:2);snd.drone((p9[tab9]-+e.target.min)/(+e.target.max-+e.target.min));});
+const CP=[];for(let i=0;i<170;i++)CP.push({x:Math.random(),y:Math.random()});
+W[8]={draw(t,dt){
+  const {g,w,h}=fit($('#c9'));g.clearRect(0,0,w,h);
+  if(tab9==='flow'){
+    const v1=p9.flow,v2=3*v1,rho=1000,P1=25000,drop=.5*rho*(v2*v2-v1*v1),P2=P1-drop;
+    const x0=20,x1=w-20,cy=h*.68,hw=h*.15,nw=hw/3;
+    const hwAt=x=>{const u=(x-x0)/(x1-x0);return u<.3?hw:u<.5?lerp(hw,nw,sstep(.3,.5,u)):u<.7?nw:u<.9?lerp(nw,hw,sstep(.7,.9,u)):hw;};
+    g.beginPath();for(let x=x0;x<=x1;x+=4)g.lineTo(x,cy-hwAt(x));for(let x=x1;x>=x0;x-=4)g.lineTo(x,cy+hwAt(x));g.closePath();g.fillStyle='rgba(30,140,190,.4)';g.fill();
+    g.strokeStyle=col('fg',.9);g.lineWidth=2.5;g.beginPath();for(let x=x0;x<=x1;x+=4)g.lineTo(x,cy-hwAt(x));g.stroke();g.beginPath();for(let x=x0;x<=x1;x+=4)g.lineTo(x,cy+hwAt(x));g.stroke();
+    const sc=(h*.4)/3;const mh=P=>Math.max(0,P/(rho*9.81))*sc;
+    [[x0+(x1-x0)*.15,P1,'wide'],[x0+(x1-x0)*.6,P2,'narrow']].forEach(([x,P,n])=>{const top=cy-hwAt(x),hh=mh(P);g.fillStyle='rgba(30,140,190,.55)';g.fillRect(x-7,top-hh,14,hh);g.strokeStyle=col('fg',.9);g.lineWidth=2;g.beginPath();g.moveTo(x-7,top-hh-14);g.lineTo(x-7,top);g.moveTo(x+7,top-hh-14);g.lineTo(x+7,top);g.stroke();txt(g,fmt(P/1000,1)+' kPa',x,top-hh-20,col('acc',1),10,'center',700);});
+    const hy=cy-hwAt(x0+(x1-x0)*.6)-mh(P1);g.setLineDash([4,4]);g.strokeStyle=GRAV+'.9)';g.lineWidth=1.5;g.beginPath();g.moveTo(x0+(x1-x0)*.6-30,hy);g.lineTo(x0+(x1-x0)*.6+30,hy);g.stroke();g.setLineDash([]);txt(g,'hydrostatic guess',x0+(x1-x0)*.6+36,hy+3,GRAV+'1)',9);
+    const n=26;for(let i=0;i<n;i++){const ph=((i/n)+t*.12*v1*(.5))%1,x=lerp(x0,x1,ph),u=ph,sp=(u<.3?1:u<.5?lerp(1,3,sstep(.3,.5,u)):u<.7?3:u<.9?lerp(3,1,sstep(.7,.9,u)):1);const yy=cy+Math.sin(i*7.3)*hwAt(x)*.6;g.fillStyle=col('fg',.7);g.beginPath();g.arc(x,yy,1.8,0,7);g.fill();g.strokeStyle=col('fg',.3);g.beginPath();g.moveTo(x,yy);g.lineTo(x-4*sp,yy);g.stroke();}
+    txt(g,`v = ${fmt(v1,2)} m/s`,x0+10,cy+hw+16,col('fg',.8),10);txt(g,`v = ${fmt(v2,2)} m/s`,x0+(x1-x0)*.6,cy+nw+16,col('fg',.8),10,'center');
+    $('#r9').innerHTML=`<div><span>Hydrostatic prediction</span><b>equal, ${fmt(P1/1000,1)} kPa</b></div><div><span>Measured in the narrow part</span><b>${fmt(P2/1000,1)} kPa</b></div><div><span>Pressure lost to speed</span><b>${fmt(drop/1000,1)} kPa</b></div>`;
+  }else if(tab9==='conv'){
+    const dT=p9.conv,sp=dT/20;const bx=20,by=14,bw=w-40,bh=h-50;
+    g.fillStyle=`rgba(255,${Math.round(150-sp*80)},60,${.12+sp*.5})`;g.fillRect(bx,by+bh,bw,10);g.fillStyle='rgba(120,190,240,.2)';g.fillRect(bx,by-6,bw,6);
+    g.strokeStyle=col('fg',.7);g.lineWidth=1.5;g.strokeRect(bx,by,bw,bh);
+    CP.forEach(p=>{
+      const px=p.x*2,u=Math.PI*Math.sin(Math.PI*p.x*2)*Math.cos(Math.PI*p.y),v=-Math.PI*Math.cos(Math.PI*p.x*2)*Math.sin(Math.PI*p.y)*(-1);
+      const k=dt*.35*sp;p.x+=u*k*.5+(Math.random()-.5)*.0008;p.y+=v*k*.5+(Math.random()-.5)*.0008;
+      if(p.x<0||p.x>1||p.y<0||p.y>1){p.x=Math.random();p.y=Math.random();}
+      const hot=1-p.y,c=`rgba(${Math.round(lerp(90,255,hot))},${Math.round(lerp(180,130,hot))},${Math.round(lerp(230,70,hot))},.9)`;
+      g.fillStyle=c;g.beginPath();g.arc(bx+p.x*bw,by+p.y*bh,2.2,0,7);g.fill();
+    });
+    if(dT<.3)txt(g,'still fluid, hydrostatics is exact',w/2,h/2,col('fg',.9),12,'center',700);
+    const ag=dT/300;
+    $('#r9').innerHTML=`<div><span>Buoyant acceleration / g</span><b>${fmt(ag*100,1)} %</b></div><div><span>Error in vertical force balance</span><b>about ${fmt(ag*100,1)} %</b></div><div><span>Verdict</span><b>${ag<.01?'hydrostatic is fine':ag<.04?'small corrections':'drop the assumption'}</b></div>`;
+  }else{
+    const r=p9.cap,hmm=14.87/r,px=Math.min(hmm*1.6,h*.5),sy=h*.74,tw=clamp(r*16,8,80),cx=w/2;
+    g.fillStyle='rgba(30,140,190,.4)';g.fillRect(cx-w*.3,sy,w*.6,h-sy-10);g.strokeStyle=col('fg',.9);g.lineWidth=2;g.strokeRect(cx-w*.3,sy-20,w*.6,h-sy+10);
+    g.strokeStyle=col('acc',1);g.beginPath();g.moveTo(cx-w*.3,sy);g.lineTo(cx-tw-12,sy);g.moveTo(cx+tw+12,sy);g.lineTo(cx+w*.3,sy);g.stroke();
+    const tt=sy-px-30;g.strokeStyle=col('fg',1);g.lineWidth=3;g.beginPath();g.moveTo(cx-tw/2,tt);g.lineTo(cx-tw/2,sy+30);g.moveTo(cx+tw/2,tt);g.lineTo(cx+tw/2,sy+30);g.stroke();
+    g.fillStyle='rgba(30,140,190,.65)';g.fillRect(cx-tw/2+1.5,sy-px,tw-3,px+30);
+    g.beginPath();g.moveTo(cx-tw/2+1.5,sy-px);g.quadraticCurveTo(cx,sy-px+Math.min(10,tw*.35),cx+tw/2-1.5,sy-px);g.strokeStyle=col('acc',1);g.lineWidth=2;g.stroke();
+    arrow(g,cx+tw/2+40,sy,cx+tw/2+40,sy-px,col('acc',1),2,7);txt(g,`${fmt(hmm,1)} mm`,cx+tw/2+48,sy-px/2,col('acc',1),11,'left',700);
+    txt(g,'flat outside level',cx-w*.3+8,sy-6,col('fg',.7),9);
+    $('#r9').innerHTML=`<div><span>Rise above outside level</span><b>${fmt(hmm,1)} mm</b></div><div><span>Capillary length</span><b>2.7 mm</b></div><div><span>Regime</span><b>${r<2.7?'surface tension matters':'gravity still wins'}</b></div>`;
+  }
+}};
+
+/* ---------- Slide 10 : synthesis ---------- */
+const REG=[
+ {n:'Incompressible liquid',h:'Density does not change with pressure.',d:'\\rho=\\rho_0',p:'P(z)=P_0-\\rho g z',e:'Oceans and lakes, dams, hydraulic jacks, water towers, manometers, submarine hulls.'},
+ {n:'Isothermal gas',h:'Ideal gas at one fixed temperature and constant g.',d:'\\rho=\\dfrac{P}{R_s T_0}',p:'P(z)=P_0\\,e^{-z/H}',e:'Altimeters in a calm layer, the lower stratosphere near 217 K, hiking estimates, an air-filled room.'},
+ {n:'Polytropic gas',h:'Pressure and density share a power law, temperature falls with height.',d:'\\rho=\\rho_0\\left(\\dfrac{P}{P_0}\\right)^{1/n}',p:'P(z)=P_0\\left(1-\\dfrac{n-1}{n}\\dfrac{z}{H}\\right)^{\\frac{n}{n-1}}',e:'The troposphere and weather, the standard atmosphere, stars and gas giants modeled as polytropes.'}
+];
+let reg=0;
+const mx=$('#matrix');
+REG.forEach((r,i)=>{
+  const c=document.createElement('button');c.className='card'+(i===0?' on':'');
+  c.innerHTML=`<h4>${r.n}</h4><div class="k">Hypothesis</div><p>${r.h}</p><div class="k">Density law</div><div class="tx" data-tex="${r.d}"></div><div class="k">Pressure profile</div><div class="tx" data-tex="${r.p}"></div><div class="k">Engineering examples</div><p>${r.e}</p>`;
+  c.addEventListener('click',()=>{reg=i;$$('#matrix .card').forEach((x,k)=>x.classList.toggle('on',k===i));snd.drone(i/2);});mx.appendChild(c);
+});
+W[9]={draw(t,dt){
+  const {g,w,h}=fit($('#c10'));g.clearRect(0,0,w,h);
+  const x0=44,x1=w-16,top=12,bot=h-26,xs=3,xp=z=>x0+(z/xs)*(x1-x0),yp=P=>bot-P*(bot-top);
+  g.strokeStyle=col('fg',.4);g.lineWidth=1;g.beginPath();g.moveTo(x0,top);g.lineTo(x0,bot);g.lineTo(x1,bot);g.stroke();
+  [0,1,2,3].forEach(v=>txt(g,v+' H',xp(v),bot+14,col('fg',.6),9,'center'));[0,.5,1].forEach(v=>txt(g,v,x0-6,yp(v)+4,col('fg',.6),9,'right'));
+  txt(g,'height z',(x0+x1)/2,h-2,col('fg',.6),9,'center');txt(g,'P / P0',8,top+8,col('fg',.6),9,'left');
+  const fns=[z=>Math.max(0,1-z),z=>Math.exp(-z),z=>Math.pow(Math.max(0,1-.2*z),5)];
+  const cs=[col('fg',.9),col('acc',1),GRAV+'1)'];
+  fns.forEach((f,i)=>{const sel=i===reg;g.beginPath();for(let z=0;z<=xs;z+=.02){const x=xp(z),y=yp(f(z));z===0?g.moveTo(x,y):g.lineTo(x,y);}g.strokeStyle=cs[i];g.lineWidth=sel?4:1.5;g.globalAlpha=sel?1:.4;g.stroke();g.globalAlpha=1;});
+  txt(g,'incompressible',xp(1)-4,yp(0)-6,col('fg',.8),9,'right');txt(g,'isothermal',xp(2),yp(.135)-8,col('acc',1),9,'left');txt(g,'polytropic (n = 1.25)',xp(2.5),yp(.23)-30,GRAV+'1)',9,'left');
+}};
+
+/* ---------- Slide 11 : quiz ---------- */
+const QS=[
+ {q:'Three vessels sit on a table. One is a cone that widens upward, one is a plain jar, one is a barrel with a thin tube on top. Each has the same floor area and each is filled with water to the same height. Which floor feels the highest pressure?',
+  o:['The cone, because it holds the most water.','The jar, because nothing interferes with the water.','The barrel with the tube, because the tube squeezes the water.','All three feel exactly the same.'],a:3,
+  w:'Floor pressure depends on depth and density only: P = rho g h. The cone passes part of its water weight to the slanted walls. The barrel lid pushes down on the water below it. The floor does not care.',an:0},
+ {q:'In the ocean, pressure climbs along a straight line with depth. In the sky, it falls along a curve that flattens. What is the real reason?',
+  o:['Gravity fades away as you leave the ground.','Water density stays constant, but air thins as pressure drops, so higher layers weigh less.','The sky is colder than the sea.','Pressure in the sky is measured with a different unit.'],a:1,
+  w:'In water, every meter weighs the same, so pressure adds up evenly. In air, each layer is lighter than the one below it, so pressure falls by a constant fraction per kilometer. That is an exponential.',an:1},
+ {q:'Picture a lake on Mars and ignore the thin air above it. Mars gravity is about 38 percent of Earth. You dive 10 m down. How much pressure does the water add compared with a 10 m dive on Earth?',
+  o:['The same, about 1 bar, since the depth is the same.','Almost double, since there is no atmosphere to help.','About 0.38 bar, since each cubic meter weighs less.','Zero. Martian water cannot push.'],a:2,
+  w:'The equation has g in it. Weaker gravity means each cubic meter of water weighs less, so rho g h shrinks by the same 38 percent. Earth gives about 0.98 bar for 10 m, Mars about 0.37 bar.',an:2},
+ {q:'A dam holds back a lake. Why does the wall need to be thick near the bottom, and why does the length of the lake behind it not matter?',
+  o:['Pressure depends on depth only, so force on the wall is set by water height and not by how far the lake stretches back.','A longer lake carries more water, so it pushes harder and the base must thicken to match.','Pressure is the same on every part of the wall, so thickness is only for looks.','Water pushes sideways only at the very bottom of the lake.'],a:0,
+  w:'Pressure grows with depth, so the lower wall takes more load. The total push grows with depth squared. A longer lake adds volume, but each point on the wall only feels the water directly above its depth.',an:3},
+ {q:'In which scenario does the fundamental equation of hydrostatics fail?',
+  o:['The pressure difference between floor and ceiling of a calm room.','The pressure at 50 m below the surface of a still lake.','The pressure along a fire hose as water speeds up through a narrowing nozzle.','The pressure inside a sealed bottle of oil on a shelf.'],a:2,
+  w:'Hydrostatics needs the fluid to be at rest, or at least not accelerating. In the nozzle the water speeds up, so pressure falls along the flow. That is Bernoulli territory.',an:4}
+];
+const qz={i:0,score:0,ans:true,timerOn:true,tl:30,run:false,anim:0,animT:0,res:[]};
+const RING=138.2;
+$('#qTimerBtn').addEventListener('click',()=>{qz.timerOn=!qz.timerOn;$('#qTimerBtn').textContent=qz.timerOn?'Timer on':'Timer off';$('#qTimerBtn').classList.toggle('on',qz.timerOn);if(!qz.timerOn){$('#ringFg').style.strokeDashoffset='0';$('#ringT').textContent='--';}});
+$('#qStart').addEventListener('click',()=>{qz.i=0;qz.score=0;qz.res=[];$('#qintro').classList.add('hide');$('#qend').classList.add('hide');$('#qplay').classList.remove('hide');qLoad();});
+$('#qAgain').addEventListener('click',()=>{$('#qend').classList.add('hide');$('#qintro').classList.remove('hide');qz.run=false;$('#qsc').textContent='Score 0';$('#qn').textContent='Question 1 of 5';});
+$('#qnext').addEventListener('click',()=>{qz.i++;if(qz.i>=QS.length)qEnd();else qLoad();});
+function qLoad(){
+  const q=QS[qz.i];qz.ans=false;qz.run=true;qz.tl=30;qz.anim=-1;
+  $('#qn').textContent=`Question ${qz.i+1} of ${QS.length}`;$('#qsc').textContent=`Score ${qz.score}`;
+  $('#qtext').textContent=q.q;$('#qfeed').textContent='';$('#qwhy').textContent='Pick an answer to see the picture.';$('#qnext').classList.add('hide');
+  const box=$('#qopts');box.innerHTML='';
+  q.o.forEach((t,k)=>{const b=document.createElement('button');b.className='opt';b.innerHTML=`<i>${'ABCD'[k]}</i><span>${t}</span>`;b.addEventListener('click',()=>qAnswer(k));box.appendChild(b);});
+}
+function qAnswer(k,timeout){
+  if(qz.ans)return;qz.ans=true;const q=QS[qz.i],ok=k===q.a;
+  $$('#qopts .opt').forEach((b,i)=>{b.disabled=true;if(i===q.a)b.classList.add('right');else if(i===k)b.classList.add('wrong');else b.classList.add('dim');});
+  if(ok){qz.score++;snd.correct();$('#qfeed').textContent='Correct.';$('#qfeed').style.color='rgb(var(--ok))';}
+  else{snd.wrong();$('#qfeed').textContent=timeout?'Time is up.':'Not quite.';$('#qfeed').style.color='rgb(var(--bad))';const d=$('#qopts');d.classList.remove('shake');void d.offsetWidth;d.classList.add('shake');}
+  $('#qsc').textContent=`Score ${qz.score}`;$('#qwhy').textContent=q.w;qz.anim=q.an;qz.animT=0;
+  $('#qnext').textContent=qz.i===QS.length-1?'See the score':'Next question';$('#qnext').classList.remove('hide');
+}
+function qEnd(){
+  qz.run=false;$('#qplay').classList.add('hide');$('#qend').classList.remove('hide');$('#qfinal').textContent=`${qz.score} / ${QS.length}`;
+  $('#qmsg').textContent=qz.score===5?'Full marks. You can read a pressure gauge in your sleep.':qz.score>=3?'Solid dive. The ocean has few secrets left from you.':'Rough descent. Go back to slide 2 and watch that cube again.';
+  snd.fin();
+}
+function quizTick(dt){
+  if(!qz.run||qz.ans||!qz.timerOn)return;
+  const before=Math.ceil(qz.tl);qz.tl-=dt;const now=Math.ceil(Math.max(0,qz.tl));
+  if(now!==before&&now<=5&&now>0)snd.tick();
+  $('#ringFg').style.strokeDashoffset=String(RING*(1-Math.max(0,qz.tl)/30));$('#ringT').textContent=String(Math.max(0,now));
+  if(qz.tl<=0)qAnswer(-1,true);
+}
+/* quiz animations */
+function qAnim(g,w,h,id,p){
+  const e=1-Math.pow(1-clamp(p,0,1),3);g.clearRect(0,0,w,h);
+  if(id===0){
+    const yb=h-50,Hh=h-110,s=Math.min(1,(w/3-16)/150)*.9;
+    for(let i=0;i<3;i++){const cx=w*(i+.5)/3;vessel(g,cx,yb,u=>WFS[i](u)*s,Hh,1,'rgba(32,150,190,.5)');
+      const bl=e*(w/3-30);g.fillStyle=col('acc',.95);g.fillRect(cx-bl/2,yb+12,bl,10);txt(g,e>.95?'same P':'',cx,yb+38,col('acc',1),11,'center',700);}
+  }else if(id===1){
+    const x0=36,x1=w-14,top=14,bot=h-30;g.strokeStyle=col('fg',.5);g.lineWidth=1;g.beginPath();g.moveTo(x0,top);g.lineTo(x0,bot);g.lineTo(x1,bot);g.stroke();
+    txt(g,'height or depth',(x0+x1)/2,h-6,col('fg',.6),9,'center');txt(g,'P',10,top+6,col('fg',.6),9);
+    const N=Math.floor(e*60);
+    g.beginPath();for(let i=0;i<=N;i++){const u=i/60,x=x0+u*(x1-x0),y=bot-(1-u)*(bot-top);i?g.lineTo(x,y):g.moveTo(x,y);}g.strokeStyle=col('fg',.9);g.lineWidth=3;g.stroke();
+    g.beginPath();for(let i=0;i<=N;i++){const u=i/60,x=x0+u*(x1-x0),y=bot-Math.exp(-u*3)*(bot-top);i?g.lineTo(x,y):g.moveTo(x,y);}g.strokeStyle=col('acc',1);g.lineWidth=3;g.stroke();
+    txt(g,'water: straight line',x1,top+14,col('fg',.9),10,'right',600);txt(g,'air: exponential curve',x1,top+30,col('acc',1),10,'right',600);
+  }else if(id===2){
+    const bw=Math.min(90,w*.2),bot=h-40,mh=h-90,bars=[['Earth',98,GRAV+'.9)'],['Mars',37.2,col('acc',.95)]];
+    bars.forEach(([n,v,c],i)=>{const cx=w*(i+.5)/2,bh=e*mh*v/98;g.fillStyle=c;g.fillRect(cx-bw/2,bot-bh,bw,bh);txt(g,n,cx,bot+16,col('fg',.9),11,'center',700);txt(g,fmt(v*e,0)+' kPa',cx,bot-bh-8,col('fg',1),11,'center',700);});
+    txt(g,'added by 10 m of water',w/2,14,col('fg',.6),10,'center');
+  }else if(id===3){
+    const gy=h-26,Hp=h-70,wx=w*.55;
+    g.fillStyle=col('fg',.18);g.fillRect(0,gy,w,26);
+    const shortL=w*.14,longL=w*.5,L=lerp(shortL,longL,sstep(.1,.9,e));
+    g.fillStyle='rgba(30,140,190,.45)';g.fillRect(wx-L,gy-Hp,L,Hp);g.strokeStyle=col('acc',1);g.lineWidth=2;g.beginPath();g.moveTo(wx-L,gy-Hp);g.lineTo(wx,gy-Hp);g.stroke();
+    g.fillStyle=col('fg',.55);g.beginPath();g.moveTo(wx,gy);g.lineTo(wx,gy-Hp*1.05);g.lineTo(wx+8,gy-Hp*1.05);g.lineTo(wx+Hp*.7,gy);g.closePath();g.fill();
+    for(let k=1;k<=8;k++){const d=k/9,len=d*50;arrow(g,wx-len-4,gy-Hp+d*Hp,wx-3,gy-Hp+d*Hp,col('acc',.95),2,6);}
+    txt(g,'lake grows longer, arrows do not change',wx-L+6,gy-Hp+16,'rgba(255,255,255,.95)',10);
+  }else{
+    const cy=h*.55,hh=h*.18,x0=16,x1=w-16;
+    const hwAt=x=>{const u=(x-x0)/(x1-x0);return u<.3?hh:u<.55?lerp(hh,hh*.35,sstep(.3,.55,u)):hh*.35;};
+    g.beginPath();for(let x=x0;x<=x1;x+=4)g.lineTo(x,cy-hwAt(x));for(let x=x1;x>=x0;x-=4)g.lineTo(x,cy+hwAt(x));g.closePath();g.fillStyle='rgba(30,140,190,.4)';g.fill();g.strokeStyle=col('fg',.9);g.lineWidth=2.5;g.stroke();
+    const xa=x0+(x1-x0)*.15,xb=x0+(x1-x0)*.75,ha=hh*1.5,hb=hh*1.5*(1-.6*e);
+    [[xa,ha,cy-hh],[xb,hb,cy-hh*.35]].forEach(([x,hgt,top])=>{g.fillStyle='rgba(30,140,190,.6)';g.fillRect(x-6,top-hgt,12,hgt);g.strokeStyle=col('fg',.9);g.lineWidth=2;g.strokeRect(x-6,top-hgt,12,hgt);});
+    txt(g,'static would match here',xb,cy-hh*1.5-hh*1.5-6,GRAV+'1)',9,'center');g.setLineDash([4,4]);g.strokeStyle=GRAV+'.9)';g.lineWidth=1.5;g.beginPath();g.moveTo(xb-30,cy-hh*.35-ha);g.lineTo(xb+30,cy-hh*.35-ha);g.stroke();g.setLineDash([]);
+    txt(g,'pressure falls as water speeds up',w/2,h-8,col('fg',.8),10,'center');
+  }
+}
+W[10]={draw(t,dt){
+  quizTick(dt);
+  if(qz.run&&!$('#qplay').classList.contains('hide')){
+    const {g,w,h}=fit($('#c11'));
+    if(qz.anim>=0){qz.animT+=dt;qAnim(g,w,h,qz.anim,qz.animT/2.2);}else{g.clearRect(0,0,w,h);txt(g,'the picture appears here',w/2,h/2,col('fg',.5),11,'center');}
+  }
+}};
+
+/* ---------- main loop ---------- */
+let last=performance.now();
+function frame(now){
+  const dt=Math.min(.05,(now-last)/1000);last=now;
+  updateTheme(dt);drawBG(dt);
+  const w=W[cur];if(w&&w.draw)w.draw(now/1000,dt);
+  requestAnimationFrame(frame);
+}
+window.addEventListener('load',renderMath);
+setG(6.5);setTab9('flow');renderDer();updateNotes();
+{const h=parseInt((location.hash||'').slice(1),10);go(h>=1&&h<=NS?h-1:0,true);}
+if(cur>0){pos=cur;lastPos=-9;}
+renderMath();
+requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
